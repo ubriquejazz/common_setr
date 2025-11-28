@@ -3,33 +3,34 @@ osThreadId ParpLEDVerdeHandle;
 osThreadId ParpLEDRojoHandle;
 osThreadId ParpLEDNaranjaHandle;
 
-osSemaphoreId SemaforoRecursoCritico1Handle;
+osSemaphoreId mySemHandle;
 int Flag = 1;
 
 void helper(int pin) {
-  osSemaphoreWait(SemaforoRecursoCritico1Handle, osWaitForever);
+  osSemaphoreWait(mySemHandle, osWaitForever);
   if (Flag==1){
   Flag = 0;
   } else {
   HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_SET);
   }
-  delay_1s();
+  //delay_1s();
+  delay_ms(50);
   HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_RESET);
   Flag = 1;
-  osSemaphoreRelease(SemaforoRecursoCritico1Handle);
+  osSemaphoreRelease(mySemHandle);
 }
 
 void helper_ia(int pin) {
     int action_needed = 0; 
 
     // Acquire Mutex, protect Flag access, then IMMEDIATELY release.
-    osSemaphoreWait(SemaforoRecursoCritico1Handle, osWaitForever);
+    osSemaphoreWait(mySemHandle, osWaitForever);
     if (Flag == 1) {
         Flag = 0;
     } else {
         action_needed = 1; // Signal that a blink is needed
     }
-    osSemaphoreRelease(SemaforoRecursoCritico1Handle);
+    osSemaphoreRelease(mySemHandle);
 
     // Perform long-duration action OUTSIDE the Mutex protection.
     if (action_needed == 1) {
@@ -38,9 +39,9 @@ void helper_ia(int pin) {
         HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_RESET);
         
         // Re-acquire Mutex to safely write to Flag a second time.
-        osSemaphoreWait(SemaforoRecursoCritico1Handle, osWaitForever);
+        osSemaphoreWait(mySemHandle, osWaitForever);
         Flag = 1; // Complete the state change
-        osSemaphoreRelease(SemaforoRecursoCritico1Handle);
+        osSemaphoreRelease(mySemHandle);
     }
 }
 
