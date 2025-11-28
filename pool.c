@@ -1,5 +1,5 @@
-
 #include "pool.h"
+#include "cmsis_os.h"
 
 SemaphoreHandle_t xSemaphore;
 
@@ -8,32 +8,30 @@ void Pool_Init() {
 }
 
 // xSemaphoreTake, xSemaphoreGive
-// porMAX_DELAY = osWaitForever
+// portMAX_DELAY = osWaitForever
 
 int Pool_LeerFrecRojo() {
-    xSemaphoreTake(xSemaphore, porMAX_DELAY);
+    xSemaphoreTake(xSemaphore, portMAX_DELAY);
     int retVal = PoolParpadeo.FrecLEDRojo;
     xSemaphoreGive(xSemaphore);
     return retVal;
 }
 
 int Pool_LeerFrecVerde() {
-    xSemaphoreTake(xSemaphore, porMAX_DELAY);
+    xSemaphoreTake(xSemaphore, portMAX_DELAY);
     int retVal = PoolParpadeo.FrecLEDRojo;
     xSemaphoreGive(xSemaphore);
     return retVal;
 }
 
-bool Pool_EscribirFrecRojo(int value) {
-    xSemaphoreTake(xSemaphore, porMAX_DELAY);
+void Pool_EscribirFrecRojo(int value) {
+    xSemaphoreTake(xSemaphore, portMAX_DELAY);
     PoolParpadeo.FrecLEDRojo = value;
     xSemaphoreGive(xSemaphore);
-    return true;
 }
 
-bool Pool_EscribirFrecVerde(int value) {
-    xSemaphoreTake(xSemaphore, porMAX_DELAY);
+void Pool_EscribirFrecVerde(int value) {
+    xSemaphoreTake(xSemaphore, portMAX_DELAY);
     PoolParpadeo.FrecLEDVerde = value;
     xSemaphoreGive(xSemaphore);
-    return true;
 }

@@ -10,9 +10,9 @@ FrecParpadeo;
 
 FrecParpadeo PoolParpadeo = {10, 1}; // Valores iniciales
 
-void Pool_Init()
-bool Pool_EscribirFrecRojo(int);
-bool Pool_EscribirFrecVerde(int);
+void Pool_Init();
+void Pool_EscribirFrecRojo(int);
+void Pool_EscribirFrecVerde(int);
 
 int Pool_LeerFrecRojo();
 int Pool_LeerFrecVerde();
