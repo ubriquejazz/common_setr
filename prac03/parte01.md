@@ -12,8 +12,6 @@
 - Simular la lectura y escritura en el recurso compartido durante 1s. 
 - Apagar el LED azul. Subir la bandera (1)
 
-
-
 b) Ejecute las tres tareas sin implementar ningún método de exclusión mutua, fijando en ***Normal***
 
 la prioridad de las tareas 1 y 2, y ***Above*** ***Normal*** la prioridad de la tarea 3.
@@ -21,8 +19,6 @@ la prioridad de las tareas 1 y 2, y ***Above*** ***Normal*** la prioridad de la 
 c) Ejecute las tres tareas implementando la suspensión del planificador
 
 d) Compare el funcionamiento global del sistema en los tres casos y extraiga las conclusiones oportunas.
-
-
 
 ## Ejercicio 1
 

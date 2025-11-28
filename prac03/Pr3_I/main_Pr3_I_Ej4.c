@@ -20,40 +20,30 @@ void helper(int pin) {
 }
 
 void helper_ia(int pin) {
-    int action_needed = 0; // Local flag to determine action outside the Mutex
+    int action_needed = 0; 
 
-    // 1. Acquire the Mutex to safely access and modify the shared Flag
+    // Acquire Mutex, protect Flag access, then IMMEDIATELY release.
     osSemaphoreWait(SemaforoRecursoCritico1Handle, osWaitForever);
-    
     if (Flag == 1) {
-        // State 1: Reset Flag to 0. No immediate output action needed.
         Flag = 0;
-        // action_needed remains 0
     } else {
-        // State 0: Prepare to perform the output action (blink) and set Flag back to 1 later.
-        action_needed = 1;
+        action_needed = 1; // Signal that a blink is needed
     }
-    
-    // 2. RELEASE the Mutex immediately after accessing the shared resource
     osSemaphoreRelease(SemaforoRecursoCritico1Handle);
 
-    // 3. Perform the time-consuming action *outside* of the Mutex protection
+    // Perform long-duration action OUTSIDE the Mutex protection.
     if (action_needed == 1) {
-        // Execute the SET, delay, RESET sequence
         HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_SET);
-        
-        // This delay is now safe, as the Mutex is released, and other tasks
-        // can acquire the Mutex and proceed with their critical sections.
-        delay_1s(); 
-        
+        delay_1s(); // Safely blocking/yielding here, Mutex is free
         HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_RESET);
         
-        // 4. Re-acquire the Mutex to safely update the Flag after the action is complete
+        // Re-acquire Mutex to safely write to Flag a second time.
         osSemaphoreWait(SemaforoRecursoCritico1Handle, osWaitForever);
-        Flag = 1; // Set Flag back to 1
+        Flag = 1; // Complete the state change
         osSemaphoreRelease(SemaforoRecursoCritico1Handle);
     }
 }
+
 /* USER CODE BEGIN Header_StartParpLEDVerde */
 /**
   * @brief  Function implementing the ParpLEDVerde thread.
