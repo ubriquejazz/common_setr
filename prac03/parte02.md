@@ -1,4 +1,4 @@
-# Parte 2
+# Ejercicio
 
 ## Pseudocodigo
 
