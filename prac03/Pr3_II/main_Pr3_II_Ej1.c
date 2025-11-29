@@ -1,3 +1,31 @@
+#include "delay.h"
+
+#define USE_MUTEX 1
+
+osMutexId myMutexHandle;
+osSemaphoreId mySemHandle;
+
+void seccion_critica(int pin) {
+  HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_SET);
+  delay_2s_10Hz(PIN_BLUE);
+  HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_RESET);
+}
+
+void helper(int pin, int mutex) {
+  if (mutex) {
+    osMutexWait(myMutexHandle, osWaitForever);
+  }
+  else {
+    osSemaphoreWait(mySemHandle, osWaitForever);
+  }
+  
+  seccion_critica(pin);
+
+  if (mutex)
+    osMutexRelease(mySemHandle);
+  else
+  osSemaphoreRelease(mySemHandle);
+}
 
 
 /* USER CODE BEGIN Header_StartParpLEDVerde */
@@ -12,17 +40,12 @@ void StartParpLEDVerde(void const * argument)
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
 
-  for(;;)
-  {
-    osSemaphoreWait(mySemHandle, osWaitForever);
-    HAL_GPIO_WritePin(GPIOD, PIN_GREEN, GPIO_PIN_SET);
-    delay_2s_10Hz(PIN_BLUE);
-    HAL_GPIO_WritePin(GPIOD, PIN_GREEN, GPIO_PIN_RESET);
-    osSemaphoreRelease(mySemHandle);
-
-    delay_4s_10Hz(PIN_GREEN);
-    vTaskSuspend(NULL);
-  }
+for(;;)
+{
+helper(PIN_GREEN, USE_MUTEX);
+delay_4s_10Hz(PIN_GREEN);
+vTaskSuspend(NULL);
+}
   /* USER CODE END 5 */ 
 }
 
@@ -41,12 +64,7 @@ void StartParpLEDRojo(void const * argument)
 osDelay(1000);
 for(;;)
 {
-osSemaphoreWait(mySemHandle, osWaitForever);
-HAL_GPIO_WritePin(GPIOD, PIN_RED, GPIO_PIN_SET);
-delay_2s_10Hz(PIN_BLUE);
-HAL_GPIO_WritePin(GPIOD, PIN_RED, GPIO_PIN_RESET);
-osSemaphoreRelease(mySemHandle);
-
+helper(PIN_RED, USE_MUTEX);
 delay_4s_10Hz(PIN_RED);
 vTaskSuspend(NULL);
 }
@@ -64,11 +82,11 @@ void StartParpLEDNaranja(void const * argument)
 {
   /* USER CODE BEGIN StartParpLEDNaranja */
   /* Infinite loop */
+osDelay(1000);
 for(;;)
 {
-  osDelay(1000);
-  delay_4s_10Hz(PIN_ORANGE);
-  vTaskSuspend(NULL);
+delay_4s_10Hz(PIN_ORANGE);
+vTaskSuspend(NULL);
 }
   /* USER CODE END StartParpLEDNaranja */
 }

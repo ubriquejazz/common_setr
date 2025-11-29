@@ -6,10 +6,17 @@
 #define PIN_GREEN       GPIO_PIN_12
 #define PIN_BLUE        GPIO_PIN_15
 
+#define FLASH_HIGH_FREQ		60
+#define FLASH_LOW_FREQ		180
+
+
 void delay_ms(uint32_t ms);
 
 void Blocking_Flash(uint16_t pin, int duracion_ms);
-void Blocking_Freq(uint16_t pin, int duracion_ms, int freq);
+void Blocking_Freq(uint16_t pin, int duracion_ms, int);
 
+void delay_1s();
+void delay_2s_10Hz(uint16_t pin);
+void delay_4s_10Hz(uint16_t pin);
 
 #endif // DELAY_H
