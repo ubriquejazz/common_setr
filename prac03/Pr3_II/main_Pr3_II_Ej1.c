@@ -12,17 +12,17 @@ void StartParpLEDVerde(void const * argument)
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
 
-for(;;)
-{
-osSemaphoreWait(SemaforoRecursoCritico1Handle, osWaitForever);
-HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
-delay_2s_10Hz(PIN_BLUE);
-HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
-osSemaphoreRelease(SemaforoRecursoCritico1Handle);
+  for(;;)
+  {
+    osSemaphoreWait(mySemHandle, osWaitForever);
+    HAL_GPIO_WritePin(GPIOD, PIN_GREEN, GPIO_PIN_SET);
+    delay_2s_10Hz(PIN_BLUE);
+    HAL_GPIO_WritePin(GPIOD, PIN_GREEN, GPIO_PIN_RESET);
+    osSemaphoreRelease(mySemHandle);
 
-delay_4s_10Hz(PIN_GREEN);
-vTaskSuspend(NULL);
-}
+    delay_4s_10Hz(PIN_GREEN);
+    vTaskSuspend(NULL);
+  }
   /* USER CODE END 5 */ 
 }
 
@@ -41,11 +41,11 @@ void StartParpLEDRojo(void const * argument)
 osDelay(1000);
 for(;;)
 {
-osSemaphoreWait(SemaforoRecursoCritico1Handle, osWaitForever);
-HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);
+osSemaphoreWait(mySemHandle, osWaitForever);
+HAL_GPIO_WritePin(GPIOD, PIN_RED, GPIO_PIN_SET);
 delay_2s_10Hz(PIN_BLUE);
-HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
-osSemaphoreRelease(SemaforoRecursoCritico1Handle);
+HAL_GPIO_WritePin(GPIOD, PIN_RED, GPIO_PIN_RESET);
+osSemaphoreRelease(mySemHandle);
 
 delay_4s_10Hz(PIN_RED);
 vTaskSuspend(NULL);
@@ -66,9 +66,9 @@ void StartParpLEDNaranja(void const * argument)
   /* Infinite loop */
 for(;;)
 {
-osDelay(1000);
-delay_4s_10Hz(PIN_ORANGE);
-vTaskSuspend(NULL);
+  osDelay(1000);
+  delay_4s_10Hz(PIN_ORANGE);
+  vTaskSuspend(NULL);
 }
   /* USER CODE END StartParpLEDNaranja */
 }
