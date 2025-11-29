@@ -27,8 +27,25 @@ the semaphore and leave it blocked when it is evicted. Run the code several time
 the processor until you have correctly observed and understood the sequence of flashes that
 occurs. Draw the corresponding timeline and explain how the inversion of priorities is reflected in it.
 
+---
+
+Unfortunately the use of semaphores prevent the Red task to run, effect of priority inversion.
+
+In a priority-based system, high-priority tasks are supposed to run before low-priority tasks. However, if a low-priority task holds a resource (semaphore) needed by a high-priority task, and a medium-priority task then runs and  prevents the low-priority task from finishing, the high-priority  task can be starved of the resource.
+
+
+
 ## Ejercicio 02
 
 Repeat exercise 2.c). Execute, again, the code several times by restarting the processor until
 you have correctly observed and understood the sequence of blinks that occurs. Draw the
 corresponding chronogram and justify that the priority inversion problem has been eliminated.
+
+
+
+---
+
+Priority inheritance temporarily raises the priority of the low-priority task to the priority of the high-priority task that is waiting for it. 
+
+With a mutex the red task is running again.
+
