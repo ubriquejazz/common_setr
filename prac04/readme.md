@@ -1,3 +1,0 @@
-
-
-Semaphore porMAX_DELAY
