@@ -467,15 +467,8 @@ void StartParpLEDVerde(void const * argument)
 		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
 		osSemaphoreRelease(SemaforoRecursoCritico1Handle);
 
-		for(long i=0;i<100;i++)
-		{
-			HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
-			for(long j=0;j<52765;j++)
-			{
-				__NOP();
-			}
-		}
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
+
+    delay_4s_10Hz(PIN_GREEN);
 		vTaskSuspend(NULL);
   	}
 
@@ -511,16 +504,8 @@ void StartParpLEDRojo(void const * argument)
 	  		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
 	  		osSemaphoreRelease(SemaforoRecursoCritico1Handle);
 
-	  		for(long i=0;i<100;i++)
-			{
-				HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
-				for(long j=0;j<52765;j++)
-				{
-					__NOP();
-				}
-			}
-	  		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
-	  		vTaskSuspend(NULL);
+      delay_4s_10Hz(PIN_RED);
+      vTaskSuspend(NULL);
 		}
 
   /* USER CODE END StartParpLEDRojo */
