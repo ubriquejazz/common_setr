@@ -6,13 +6,7 @@ osSemaphoreId mySemHandle;
 
 int Flag = 1;
 
-void helper(int pin, int mutex) {
-  if (mutex) {
-    osMutexWait(myMutexHandle, osWaitForever);
-  }
-  else {
-    osSemaphoreWait(mySemHandle, osWaitForever);
-  }
+void seccion_critica(int pin) {
   if (Flag==1){
     Flag = 0;
   } else {
@@ -20,9 +14,20 @@ void helper(int pin, int mutex) {
   }
   //delay_1s();
   delay_ms(50);
-
   HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_RESET);
   Flag = 1;
+}
+
+void helper(int pin, int mutex) {
+  if (mutex) {
+    osMutexWait(myMutexHandle, osWaitForever);
+  }
+  else {
+    osSemaphoreWait(mySemHandle, osWaitForever);
+  }
+  
+  seccion_critica(pin);
+
   if (mutex)
     osMutexRelease(mySemHandle);
   else
