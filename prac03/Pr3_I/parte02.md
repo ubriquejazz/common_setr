@@ -13,12 +13,14 @@ Using a 0-millisecond timeout is commonly referred to as **polling** or **try-ac
 - **Avoid Deadlock:** It guarantees that your task will **never block indefinitely**, which can be useful in time-sensitive control loops or tasks that must not miss a deadline.
 - **Alternative to Blocking:** It is the standard way to implement a **try-acquire** or a **non-blocking attempt** to access a resource.
 
-    osStatus status = osSemaphoreWait(SemaforoRecursoCritico1Handle, 0); // WaitTimeMilliseconds = 0
-    if (status == osOK) {
-        // Success: Acquired the Mutex, access the critical section.
-    } else if (status == osErrorTimeout) {
-        // Failure: Mutex was busy, proceed with non-critical work.
-    }
+---
+
+El sistema funciona, los tiempos son los siguientes:
+
+- RED = 200 ms, GREEN = 550 ms (misma prioridad)
+- ORANGE = 50 ms (alta prioridad)
+
+
 
 ## Ejercicio 5 - Mutex
 
@@ -33,3 +35,7 @@ Using a Mutex is the **correct synchronization primitive** for protecting the sh
 However, the key takeaway remains the same: **You must not include the blocking delay (`delay_1s()`) while the Mutex is held.**
 
 **Access:** The lines `if (Flag == 1) { Flag = 0; } else { action_needed = 1; }` are executed safely and atomically relative to other tasks.
+
+___
+
+El uso del mutex bloquea el parpade del LED rojo y verde. Esto se debe a que el mutex debe ser liberado por la tarea que lo creo. 

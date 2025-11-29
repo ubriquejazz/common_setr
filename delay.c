@@ -15,6 +15,19 @@ void delay_1s() {
   __NOP();
   }
 }
+
+void delay_4s_10Hz() {
+	for(long i=0;i<100;i++)
+	{
+		HAL_GPIO_TogglePin(GPIOD, pin);
+		for(long j=0;j<52765;j++)
+		{
+			__NOP();
+		}
+	}
+	HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_RESET);
+}
+	
 void Blocking_Flash(uint16_t pin, int duracion_ms) {
   int iterations = duracion_ms / 50;
   for (int j=0; j<iterations; j++) {
