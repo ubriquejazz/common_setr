@@ -11,12 +11,24 @@ void delay_ms(uint32_t ms) {
 void delay_1s() {
   // 52765 * 12 = 633180
   for(long i=0;i<12;i++) {
-  for(long j=0;j<52765;j++) 
-  __NOP();
-  }
+    for(long j=0;j<52765;j++) 
+    __NOP();
+    }
 }
 
-void delay_4s_10Hz() {
+void delay_2s_10Hz(int pin) {
+	for(long i=0;i<50;i++)
+	{
+		HAL_GPIO_TogglePin(GPIOD, pin);
+		for(long j=0;j<52765;j++)
+		{
+			__NOP();
+		}
+	}
+	HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_RESET);
+}
+	
+void delay_4s_10Hz(int pin) {
 	for(long i=0;i<100;i++)
 	{
 		HAL_GPIO_TogglePin(GPIOD, pin);
