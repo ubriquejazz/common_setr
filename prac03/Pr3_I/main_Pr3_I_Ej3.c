@@ -2,7 +2,7 @@
 
 int Flag = 1;
 
-void helper_ex02(int pin) {
+void helper(int pin) {
   taskENTER_CRITICAL();
   if (Flag==1){
     Flag = 0;
@@ -11,13 +11,14 @@ void helper_ex02(int pin) {
     HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_SET);
   }
   delay_1s(); // blocking delay
+  // delay_ms(50); // shorter blocking delay
   
   HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_RESET);
   Flag = 1;
   taskEXIT_CRITICAL();
 }
 
-void helper_ex02_ia(int pin) {
+void helper_ia(int pin) {
     // Local variable to store the action state determined by the Flag
     int action_needed = 0; 
 
@@ -58,7 +59,7 @@ void Start() {
   for(;;)
   {
     HAL_GPIO_WritePin(GPIOD, PIN_XXX, GPIO_PIN_SET);
-    helper_ex02(PIN_BLUE);
+    helper(PIN_BLUE);
     osDelay(miDelay);
     HAL_GPIO_WritePin(GPIOD, PIN_XXX, GPIO_PIN_RESET);
     osDelay(miDelay);

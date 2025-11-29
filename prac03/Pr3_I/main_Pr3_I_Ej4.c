@@ -1,9 +1,7 @@
-
-osThreadId ParpLEDVerdeHandle;
-osThreadId ParpLEDRojoHandle;
-osThreadId ParpLEDNaranjaHandle;
+#include "delay.h"
 
 osSemaphoreId mySemHandle;
+
 int Flag = 1;
 
 void helper(int pin) {
@@ -59,10 +57,10 @@ void StartParpLEDVerde(void const * argument)
 
   for(;;)
   	{
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOD, PIN_GREEN, GPIO_PIN_SET);
     helper(PIN_BLUE);
 		osDelay(200);
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOD, PIN_GREEN, GPIO_PIN_RESET);
 		osDelay(200);
   	}
   /* USER CODE END 5 */ 
@@ -82,10 +80,10 @@ void StartParpLEDRojo(void const * argument)
 
 for(;;)
   {
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOD, PIN_RED, GPIO_PIN_SET);
   helper(PIN_BLUE);
   osDelay(550);
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, PIN_RED, GPIO_PIN_RESET);
   osDelay(550);
   }
 /* USER CODE END StartParpLEDRojo */
