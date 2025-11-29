@@ -1,10 +1,16 @@
 #include "pool.h"
+#include "delay.h"
 #include "cmsis_os.h"
 
 SemaphoreHandle_t xSemaphore;
 
+FrecParpadeo PoolParpadeo;
+
 void Pool_Init() {
     xSemaphore = xSemaphoreCreateBinary();
+    PoolParpadeo.FrecLEDVerde = FLASH_LOW_FREQ;
+    PoolParpadeo.FrecLEDRojo = FLASH_HIGH_FREQ;
+
 }
 
 // xSemaphoreTake, xSemaphoreGive

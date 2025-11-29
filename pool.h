@@ -8,8 +8,6 @@ typedef struct
 }
 FrecParpadeo;
 
-FrecParpadeo PoolParpadeo = {10, 1}; // Valores iniciales
-
 void Pool_Init();
 void Pool_EscribirFrecRojo(int);
 void Pool_EscribirFrecVerde(int);

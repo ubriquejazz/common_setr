@@ -1,5 +1,18 @@
 # include "pool.h"
 
+UART_HandleTypeDef huart2;
+
+osThreadId RedTaskHandle;
+osThreadId GreenTaskHandle;
+osThreadId OrangeTaskHandle;
+osMutexId myMutexHandle;
+osSemaphoreId mySemHandle;
+/* USER CODE BEGIN PV */
+
+void dprint(const char *msg) {
+	HAL_UART_Transmit(&huart2, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
+	HAL_UART_Transmit(&huart2, (uint8_t *)"\r\n", 2, HAL_MAX_DELAY);
+}
 
 void main() {
 
@@ -23,15 +36,27 @@ void StartCtrl() {
     osDelay(8000);
 }
 
-void StartGreen() {
-    // Ajustar parpadeo cada 10 segundos
-    int freq = Pool_LeerFrecVerde();
-    Blocking_Freq(PIN_GREEN, 10000, freq);
+void StartGreen(void const * argument) {
+int freq=0;
+char msg[50];
+for(;;)
+{
+sprintf(msg, "Green: %d", freq);
+dprint(msg);
+//Blocking_Freq(PIN_GREEN, 10000, freq);
+//freq = Pool_LeerFrecVerde();
+osDelay(9500);
+}
 }
 
-void StartRed() {
-    // Ajustar parpadeo cada 6 segundos
-    int freq = Pool_LeerFrecRojo();
-    Blocking_Freq(PIN_RED, 6000, freq);
-    
+void StartRed(void const * argument) {
+{
+int freq=99;
+char msg[50];
+for(;;)
+{
+sprintf(msg, "Rojo: %d", freq);
+dprint(msg);
+osDelay(6000);
+}
 }
