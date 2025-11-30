@@ -8,9 +8,11 @@ typedef struct
 }
 FrecParpadeo;
 
-void Pool_Init();
-void Pool_EscribirFrecRojo(int);
-void Pool_EscribirFrecVerde(int);
+typedef Base bool;
+
+bool Pool_Init();
+bool Pool_EscribirFrecRojo(int);
+bool Pool_EscribirFrecVerde(int);
 
 int Pool_LeerFrecRojo();
 int Pool_LeerFrecVerde();
