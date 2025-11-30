@@ -5,9 +5,11 @@
 
 typedef enum {Set, Reset} CondFlag_T;
 
-CondFlag_T* CondFlag_Create()
+typedef Base bool;
+
+bool CondFlag_Init();
 CondFlag_T Cond_Check();
-void CondFlag_Set(CondFlag_T* flag_handle);
-void CondFlag_Clear(CondFlag_T* flag_handle);
+bool CondFlag_Set();
+bool CondFlag_Clear();
 
 #endif // COND_H

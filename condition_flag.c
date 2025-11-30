@@ -1,39 +1,45 @@
 // condition_flag.c
 
-osMutexId myMutexHandle;
+SemaphoreHandle_t xSemaphore;
 
-CondFlag_T* CondFlag_Create() {
-    CondFlag_T* new_flag = (CondFlag_T*)malloc(sizeof(CondFlag_T));
-    if (new_flag) {
-        new_flag->state = CF_Reset;
-        // pthread_mutex_init(&new_flag->mutex, NULL);
-        // pthread_cond_init(&new_flag->condition_var, NULL); 
+CondFlag_T Condition;
+
+bool CondFlag_Init() {
+    bool retVal = pdTRUE;
+    xSemaphore = xSemaphoreCreateMutex();
+    if (xSemaphore == NULL)
+        // insufficient heap memory
+        retVal = pdFALSE;
+    else {
+        // 
+        Condition = Reset;
     }
-    return new_flag;
+    return retVal;
 }
 
-void CondFlag_Set(CondFlag_T* flag_handle) {
-    if (flag_handle) {
-        osMutexWait(myMutexHandle, osWaitForever);
-        flag_handle->state = CF_Set;
-        osMutexRelease(myMutexHandle);
+bool CondFlag_Set() {
+    bool retVal = pdFALSE;
+    if ( xSemaphoreTake(xSemaphore, portMAX_DELAY) == pdTRUE) {
+        Condition = Set;
+        xSemaphoreGive(xSemaphore);
+        retVal = pdTRUE;
     }
 }
 
-void CondFlag_Clear(CondFlag_T* flag_handle) {
-    if (flag_handle) {
-        osMutexWait(myMutexHandle, osWaitForever);
-        flag_handle->state = CF_Set;
-        osMutexRelease(myMutexHandle);
+bool CondFlag_Clear(CondFlag_T* flag_handle) {
+    bool retVal = pdFALSE;
+    if ( xSemaphoreTake(xSemaphore, portMAX_DELAY) == pdTRUE) {
+        Condition = Reset;
+        xSemaphoreGive(xSemaphore);
+        retVal = pdTRUE;
     }
 }
 
-bool CondFlag_Check(const CondFlag_T* flag_handle) {
-    bool result = false;
-    if (flag_handle) {
-        osMutexWait(myMutexHandle, osWaitForever);
-        result = (flag_handle->state == CF_Set);
-        osMutexRelease(myMutexHandle);
+CondFlag_T CondFlag_Check(const CondFlag_T* flag_handle) {
+    CondFlag_T retVal = False;
+    if ( xSemaphoreTake(xSemaphore, portMAX_DELAY) == pdTRUE) {
+        retVal = Condition;
+        xSemaphoreGive(xSemaphore);
     }
-    return result;
+    return retVal;
 }
