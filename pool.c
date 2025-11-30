@@ -1,14 +1,14 @@
 #include "pool.h"
 #include "delay.h"
 
-SemaphoreHandle_t xSemaphore;
+SemaphoreHandle_t Pool_Semph;
 
 FrecParpadeo PoolParpadeo;
 
 BaseType_t Pool_Init() {
     BaseType_t retVal = pdTRUE;
-    xSemaphore = xSemaphoreCreateBinary();
-    if (xSemaphore == NULL)
+    Pool_Semph = xSemaphoreCreateBinary();
+    if (Pool_Semph == NULL)
         // insufficient heap memory
         retVal = pdFALSE;
     else {
@@ -18,32 +18,29 @@ BaseType_t Pool_Init() {
     return retVal;
 }
 
-// xSemaphoreTake, xSemaphoreGive
-// portMAX_DELAY = osWaitForever
-
 int Pool_LeerFrecRojo() {
     int retVal = -1;
-    if ( xSemaphoreTake(xSemaphore, portMAX_DELAY) == pdTRUE) {
+    if ( xSemaphoreTake(Pool_Semph, portMAX_DELAY) == pdTRUE) {
         retVal = PoolParpadeo.FrecLEDRojo;
-        xSemaphoreGive(xSemaphore);
+        xSemaphoreGive(Pool_Semph);
     }
     return retVal;
 }
 
 int Pool_LeerFrecVerde() {
     int retVal = -1;
-    if ( xSemaphoreTake(xSemaphore, portMAX_DELAY) == pdTRUE) {
+    if ( xSemaphoreTake(Pool_Semph, portMAX_DELAY) == pdTRUE) {
         retVal = PoolParpadeo.FrecLEDVerde;
-        xSemaphoreGive(xSemaphore);
+        xSemaphoreGive(Pool_Semph);
     }
     return retVal;
 }
 
 BaseType_t Pool_EscribirFrecRojo(int value) {
     BaseType_t retVal = pdFALSE;
-    if ( xSemaphoreTake(xSemaphore, portMAX_DELAY) == pdTRUE) {
+    if ( xSemaphoreTake(Pool_Semph, portMAX_DELAY) == pdTRUE) {
         PoolParpadeo.FrecLEDRojo = value;
-        xSemaphoreGive(xSemaphore);
+        xSemaphoreGive(Pool_Semph);
         retVal = pdTRUE;
     }
     return retVal;
@@ -51,9 +48,9 @@ BaseType_t Pool_EscribirFrecRojo(int value) {
 
 BaseType_t Pool_EscribirFrecVerde(int value) {
     BaseType_t retVal = pdFALSE;
-    if ( xSemaphoreTake(xSemaphore, portMAX_DELAY) == pdTRUE) {
+    if ( xSemaphoreTake(Pool_Semph, portMAX_DELAY) == pdTRUE) {
         PoolParpadeo.FrecLEDVerde = value;
-        xSemaphoreGive(xSemaphore);
+        xSemaphoreGive(Pool_Semph);
         retVal = pdTRUE;
     }
     return retVal;
