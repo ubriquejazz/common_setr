@@ -7,9 +7,8 @@ osThreadId GreenTaskHandle;
 osThreadId OrangeTaskHandle;
 osMutexId myMutexHandle;
 osSemaphoreId mySemHandle;
-/* USER CODE BEGIN PV */
 
-void dprint(const char *msg) {
+void println(const char *msg) {
 	HAL_UART_Transmit(&huart2, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
 	HAL_UART_Transmit(&huart2, (uint8_t *)"\r\n", 2, HAL_MAX_DELAY);
 }
@@ -41,8 +40,7 @@ int freq=0;
 char msg[50];
 for(;;)
 {
-sprintf(msg, "Green: %d", freq);
-dprint(msg);
+sprintf(msg, "Green: %d", freq); println(msg);
 //Blocking_Freq(PIN_GREEN, 10000, freq);
 //freq = Pool_LeerFrecVerde();
 osDelay(9500);
@@ -55,8 +53,7 @@ int freq=99;
 char msg[50];
 for(;;)
 {
-sprintf(msg, "Rojo: %d", freq);
-dprint(msg);
+sprintf(msg, "Rojo: %d", freq); println(msg);
 osDelay(6000);
 }
 }
