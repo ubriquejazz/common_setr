@@ -1,13 +1,12 @@
 #include "pool.h"
 #include "delay.h"
-#include "cmsis_os.h"
 
 SemaphoreHandle_t xSemaphore;
 
 FrecParpadeo PoolParpadeo;
 
-bool Pool_Init() {
-    bool retVal = pdTRUE;
+BaseType_t Pool_Init() {
+    BaseType_t retVal = pdTRUE;
     xSemaphore = xSemaphoreCreateBinary();
     if (xSemaphore == NULL)
         // insufficient heap memory
@@ -40,8 +39,8 @@ int Pool_LeerFrecVerde() {
     return retVal;
 }
 
-void Pool_EscribirFrecRojo(int value) {
-    bool retVal = pdFALSE;
+BaseType_t Pool_EscribirFrecRojo(int value) {
+    BaseType_t retVal = pdFALSE;
     if ( xSemaphoreTake(xSemaphore, portMAX_DELAY) == pdTRUE) {
         PoolParpadeo.FrecLEDRojo = value;
         xSemaphoreGive(xSemaphore);
@@ -50,8 +49,8 @@ void Pool_EscribirFrecRojo(int value) {
     return retVal;
 }
 
-void Pool_EscribirFrecVerde(int value) {
-    bool retVal = pdFALSE;
+BaseType_t Pool_EscribirFrecVerde(int value) {
+    BaseType_t retVal = pdFALSE;
     if ( xSemaphoreTake(xSemaphore, portMAX_DELAY) == pdTRUE) {
         PoolParpadeo.FrecLEDVerde = value;
         xSemaphoreGive(xSemaphore);
