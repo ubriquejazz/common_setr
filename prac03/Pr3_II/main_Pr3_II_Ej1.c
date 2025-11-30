@@ -22,9 +22,9 @@ void helper(int pin, int mutex) {
   seccion_critica(pin);
 
   if (mutex)
-    osMutexRelease(mySemHandle);
+    osMutexRelease(myMutexHandle);
   else
-  osSemaphoreRelease(mySemHandle);
+    osSemaphoreRelease(mySemHandle);
 }
 
 

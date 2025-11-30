@@ -1,4 +1,4 @@
-# Comunicacion entre tareas
+# Comunicacion entre tareas II
 
 ## Ejercicio II_1
 
