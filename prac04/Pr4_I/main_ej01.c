@@ -1,4 +1,11 @@
+#include "delay.h"
+#include "condition_flag.h"
+
 CondFlag_T Flag1, Flag2;
+
+osThreadId RedTaskHandle;
+osThreadId GreenTaskHandle;
+osThreadId BlueTaskHandle;
 
 void main() {
 
@@ -7,7 +14,7 @@ void main() {
   CondFlag_Init(&Flag1);
   CondFlag_Init(&Flag2);
   /* USER CODE END 2 */
-  
+
 }
 
 void StartRed(void const * argument)
