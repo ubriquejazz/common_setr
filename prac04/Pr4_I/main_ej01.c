@@ -1,69 +1,82 @@
-typedef enum { Set, Reset} FlagStatus;
+CondFlag_T Flag1, Flag2;
+
+void main() {
+
+  MX_GPIO_Init();
+  /* USER CODE BEGIN 2 */
+  CondFlag_Init(&Flag1);
+  CondFlag_Init(&Flag2);
+  /* USER CODE END 2 */
+  
+}
 
 void StartRed(void const * argument)
 {
-  /* USER CODE BEGIN StartRed */
-  /* Infinite loop */ 
-  TickType_t lastWakeTime = xTaskGetTickCount();
   for(;;)
   {
-	HAL_GPIO_WritePin(GPIOD, PIN_RED, GPIO_PIN_SET);
-
-    // Parpadeo del LED a 10 Hz durante 10s
-	Blocking_Flash(PIN_RED, 15000);
+    // Parpadeo del LED a HF
+    Blocking_Freq(PIN_RED, 15000, FLASH_HIGH_FREQ);
 
     // Set de la bandera a 1
+    CondFlag_Set(&Flag1);
 
-    // Parpadeo del LED a 10 Hz durante 10s
-	Blocking_Flash(PIN_RED, 10000);
+    // Parpadeo del LED a LF
+    Blocking_Freq(PIN_RED, 10000, FLASH_LOW_FREQ);
 
     // Clear de la bandera a 1
+    CondFlag_Clear(&Flag1);
 
-    // Parpadeo del LED a 10 Hz durante 10s
-	Blocking_Flash(PIN_RED, 5000);
+    // Parpadeo del LED a HF
+    Blocking_Freq(PIN_RED, 5000, FLASH_HIGH_FREQ);
 
-    // Fin de la tarea
-
+    vTaskSuspend(NULL);
   }
 }
 
 void StartGreen(void const * argument)
 {
-  /* USER CODE BEGIN StartGreen */
-  /* Infinite loop */
-  TickType_t lastWakeTime = xTaskGetTickCount();
+
   for(;;)
   {
-	HAL_GPIO_WritePin(GPIOD, PIN_GREEN, GPIO_PIN_SET);
+    // Parpadeo del LED a HF
+    Blocking_Freq(PIN_GREEN, 10000, FLASH_HIGH_FREQ);
+    
+    // Set de la bandera a 2
+    CondFlag_Set(&Flag2);
 
-    // Parpadeo del LED a 10 Hz durante 10s
-	Blocking_Flash(PIN_GREEN, 10000);
+    // Parpadeo del LED a LF
+    Blocking_Freq(PIN_GREEN, 10000, FLASH_LOW_FREQ);
 
-    // Set de la bandera a 1
+    // Clear de la bandera a 2
+    CondFlag_Clear(&Flag2);
 
-    // Parpadeo del LED a 10 Hz durante 10s
+    // Parpadeo del LED a HF
+    Blocking_Freq(PIN_GREEN, 10000, FLASH_HIGH_FREQ);
 
-    // Clear de la bandera a 1
-
-    // Parpadeo del LED a 10 Hz durante 10s
-
-    // Fin de la tarea
-
+    vTaskSuspend(NULL);
   }
+  
 }
 
 void StartBlue(void const * argument)
 {
-  /* USER CODE BEGIN StartRed */
-  /* Infinite loop */ 
-  TickType_t lastWakeTime = xTaskGetTickCount();
+
+  int delay = 1000;
   for(;;)
   {
-	HAL_GPIO_WritePin(GPIOD, PIN_BLUE, GPIO_PIN_SET);
+	  // Parpadeo del LED a HF
+	  if ((Flag1 == Set) && (Flag2 == Set))
+		Blocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ);
 
-    // Parpadeo del LED a 1 Hz si las dos banderas están en SET
+	  // Parpadeo del LED a LF
+	  else if ((Flag1 == Reset) && (Flag2 == Reset))
+		Blocking_Freq(PIN_BLUE, delay, FLASH_LOW_FREQ);
 
-    // Parpadeo del LED a 10 Hz si las dos banderas están en RESET
+	  // Do nothing otherwise
+	  else {
+		HAL_GPIO_WritePin(GPIOD, PIN_BLUE, GPIO_PIN_RESET);
+		osDelay(delay);
+	  }
 
   }
 }

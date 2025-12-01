@@ -3,25 +3,23 @@
 
 SemaphoreHandle_t InternSemph;
 
-CondFlag_T Condition;
-
-BaseType_t CondFlag_Init() {
+BaseType_t CondFlag_Init(CondFlag_T* flag_handle) {
 	BaseType_t retVal = pdTRUE;
     InternSemph = xSemaphoreCreateMutex();
     if (InternSemph == NULL)
         // insufficient heap memory
         retVal = pdFALSE;
     else {
-        // 
-        Condition = Reset;
+        // Init value
+    	*flag_handle = Reset;
     }
     return retVal;
 }
 
-BaseType_t CondFlag_Set() {
+BaseType_t CondFlag_Set(CondFlag_T* flag_handle) {
 	BaseType_t retVal = pdFALSE;
     if ( xSemaphoreTake(InternSemph, portMAX_DELAY) == pdTRUE) {
-        Condition = Set;
+    	*flag_handle = Set;
         xSemaphoreGive(InternSemph);
         retVal = pdTRUE;
     }
@@ -31,18 +29,9 @@ BaseType_t CondFlag_Set() {
 BaseType_t CondFlag_Clear(CondFlag_T* flag_handle) {
 	BaseType_t retVal = pdFALSE;
     if ( xSemaphoreTake(InternSemph, portMAX_DELAY) == pdTRUE) {
-        Condition = Reset;
+        *flag_handle = Reset;
         xSemaphoreGive(InternSemph);
         retVal = pdTRUE;
-    }
-    return retVal;
-}
-
-CondFlag_T CondFlag_Check(const CondFlag_T* flag_handle) {
-    CondFlag_T retVal = Reset;
-    if ( xSemaphoreTake(InternSemph, portMAX_DELAY) == pdTRUE) {
-        retVal = Condition;
-        xSemaphoreGive(InternSemph);
     }
     return retVal;
 }

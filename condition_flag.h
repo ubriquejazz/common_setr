@@ -5,9 +5,8 @@
 
 typedef enum {Set, Reset} CondFlag_T;
 
-BaseType_t CondFlag_Init();
-CondFlag_T Cond_Check();
-BaseType_t CondFlag_Set();
-BaseType_t CondFlag_Clear();
+BaseType_t CondFlag_Init(CondFlag_T* flag_handle);
+BaseType_t CondFlag_Set(CondFlag_T* flag_handle);
+BaseType_t CondFlag_Clear(CondFlag_T* flag_handle);
 
 #endif // COND_H
