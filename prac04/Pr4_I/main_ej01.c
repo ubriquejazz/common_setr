@@ -11,8 +11,14 @@ void main() {
 
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  CondFlag_Init(&Flag1);
-  CondFlag_Init(&Flag2);
+  if (CondFlag_Init(&Flag1) != pdTRUE) {
+    // Handle error: could not create the semaphore
+    return; 
+  }
+  if (CondFlag_Init(&Flag2) != pdTRUE) {
+    // Handle error: could not create the semaphore
+    return; 
+  }
   /* USER CODE END 2 */
 
 }
