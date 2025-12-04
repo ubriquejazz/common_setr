@@ -11,18 +11,14 @@ void main() {
   MX_GPIO_Init();
 }
 
+// Tarea receptoras
 void StartRed(void const * argument)
 {
   for(;;)
   {
     HAL_GPIO_WritePin(GPIOD, PIN_RED, GPIO_PIN_SET);
-
-    // Tarea receptoras
-    osSignalWait(0x0001, osWaitForever);
-
-    // Parpadeo del LED a 1 Hz durante 10 s
-    Blocking_Flash(PIN_RED, 5000);
-
+		osSignalWait(1, osWaitForever);
+		Blocking_Freq(PIN_RED, 5000, FLASH_HIGH_FREQ);
   }
 }
 
@@ -33,12 +29,8 @@ void StartGreen(void const * argument)
   for(;;)
   {
 	  HAL_GPIO_WritePin(GPIOD, PIN_GREEN, GPIO_PIN_SET);
-
-    // Tarea receptoras
     osSignalWait(0x0001, osWaitForever);
-
-    // Parpadeo del LED a 1 Hz durante 10 s
-    Blocking_Flash(PIN_GREEN, 10000);
+    Blocking_Freq(PIN_GREEN, 5000, FLASH_HIGH_FREQ);
   }
 }
 
@@ -51,16 +43,15 @@ void StartBlue(void const * argument)
   {
 
     HAL_GPIO_WritePin(GPIOD, PIN_BLUE, GPIO_PIN_RESET);
-
-    // Parpadeo del LED a 1 Hz durante 10 s
-    Blocking_Flash(PIN_BLUE, 10000);
+    Blocking_Freq(PIN_BLUE, 10000, FLASH_LOW_FREQ);
 
     osSignalSet(GreenTaskHandle, 1);
-    osDelay(6000);
+    //Blocking_Freq(PIN_BLUE, 6000, FLASH_HIGH_FREQ);
+    HAL_Delay(6000);
 
-    osSignalSet(RedTaskHandle, 1);
-    osDelay(6000);
-
+		osSignalSet(RedTaskHandle, 1);
+		Blocking_Freq(PIN_BLUE, 6000, FLASH_HIGH_FREQ);
+		//HAL_Delay(6000);
 
   }
 }
