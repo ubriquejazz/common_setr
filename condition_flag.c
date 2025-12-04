@@ -36,16 +36,16 @@ BaseType_t CondFlag_Clear(CondFlag_T* flag_handle) {
         // If the scheduler hasn't started
         retVal = pdFALSE;
     }
-    flag_handle->state = Set;
+    flag_handle->state = Reset;
     return retVal;
 }
    
 // Waits for the flag to be set (takes the semaphore).
-BaseType_t CondFlag_Wait(CondFlag_T* flag_handle) {
+BaseType_t CondFlag_Wait(CondFlag_T flag) {
 	BaseType_t retVal;
-    retVal = xSemaphoreTake(flag_handle->semaphore, portMAX_DELAY);
+    retVal = xSemaphoreTake(flag->semaphore, portMAX_DELAY);
     if ( retVal == pdTRUE) {
-        flag_handle->state = Reset;
+        
     }
     return retVal;
 }
