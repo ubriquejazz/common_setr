@@ -3,16 +3,16 @@
 
 #include "cmsis_os.h"
 
-typedef enum {Set, Reset} CFLAGFlagState_T;
+typedef enum {Set, Reset} CFlagState_t;
 
 typedef struct {
     SemaphoreHandle_t semaphore;
-    CFLAGFlagState_T state; // 
-} CFLAGFlag_T;
+    CFlagState_t state; // 
+} CFlag_t;
 
-BaseType_t CFLAGFlag_Init(CFLAGFlag_T* handle);
-BaseType_t CFLAGFlag_Set(CFLAGFlag_T* handle);
-BaseType_t CFLAGFlag_Clear(CFLAGFlag_T* handle);
-BaseType_t CFLAGFlag_Wait(CFLAGFlag_T* handle);
+BaseType_t CFlag_Init(CFlag_t* handle);
+BaseType_t CFlag_Set(CFlag_t* handle);
+BaseType_t CFlag_Clear(CFlag_t* handle);
+CFlagState_t CFlag_Wait(CFlag_t* handle);
 
 #endif // CFLAG_H
