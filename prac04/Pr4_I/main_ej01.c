@@ -10,6 +10,7 @@ osThreadId BlueTaskHandle;
 void main() {
 
   MX_GPIO_Init();
+  
   /* USER CODE BEGIN 2 */
   if (CFlag_Init(&Flag1) != pdTRUE) {
     // Handle error: could not create the semaphore
@@ -73,22 +74,20 @@ void StartGreen(void const * argument)
 
 void StartBlue(void const * argument)
 {
-
   int delay = 1000;
   for(;;)
   {
     // Parpadeo del LED a LF inicial
     Blocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ);
 
-	  // Parpadeo del LED a HF o LF según el estado de las banderas
-	  if ((Flag1.state == Set) && (Flag2.state == Set))
-  		Blocking_Freq(PIN_BLUE, delay, FLASH_LOW_FREQ);
-	  else if ((Flag1.state == Reset) && (Flag2.state == Reset))
-	  	Blocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ);
+    // Parpadeo del LED a HF o LF según el estado de las banderas
+    if ((Flag1.state == Set) && (Flag2.state == Set))
+      Blocking_Freq(PIN_BLUE, delay, FLASH_LOW_FREQ);
+    else if ((Flag1.state == Reset) && (Flag2.state == Reset))
+      Blocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ);
     else {
-  		HAL_GPIO_WritePin(GPIOD, PIN_BLUE, GPIO_PIN_RESET);
-	  	osDelay(delay);
-	  }
-
+      HAL_GPIO_WritePin(GPIOD, PIN_BLUE, GPIO_PIN_RESET);
+      osDelay(delay);
+    }
   }
 }

@@ -3,7 +3,7 @@
 
 BaseType_t Pool_Init(Pool_t* handle) {
     BaseType_t retVal = pdTRUE;
-    handle->sempahore = xSemaphoreCreateBinary();
+    handle->semaphore = xSemaphoreCreateBinary();
     if (handle->semaphore == NULL)
         // insufficient heap memory
         retVal = pdFALSE;
@@ -17,9 +17,9 @@ BaseType_t Pool_Init(Pool_t* handle) {
 
 BaseType_t Pool_Escribir(Pool_t* handle, int value) {
     BaseType_t retVal = pdFALSE;
-    if ( xSemaphoreTake(Pool_Semph, portMAX_DELAY) == pdTRUE) {
+    if ( xSemaphoreTake(handle->semaphore, portMAX_DELAY) == pdTRUE) {
         handle->data = value;
-        xSemaphoreGive(Pool_Semph);
+        xSemaphoreGive(handle->semaphore);
         retVal = pdTRUE;
     }
     return retVal;
@@ -29,7 +29,7 @@ int Pool_Leer(Pool_t* handle) {
     int retVal = -1;
     if ( xSemaphoreTake(handle->semaphore, portMAX_DELAY) == pdTRUE) {
         retVal = handle->data;
-        xSemaphoreGive(Pool_Semph);
+        xSemaphoreGive(handle->semaphore);
     }
     return retVal;
 }

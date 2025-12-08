@@ -1,5 +1,5 @@
 #include "main.h"
-#include "condition_flag.h"
+#include "cflag.h"
 
 BaseType_t CFlag_Init(CFlag_t* handle) {
 	BaseType_t retVal = pdTRUE;
@@ -40,7 +40,7 @@ BaseType_t CFlag_Clear(CFlag_t* handle) {
 }
    
 // Waits for the flag to be set (takes the semaphore).
-CFlag_t CFlag_Wait(CFlag_t* flag) {
+CFlagState_t CFlag_Wait(CFlag_t* flag) {
     xSemaphoreTake(flag->semaphore, portMAX_DELAY);
     return flag->state;
 }
