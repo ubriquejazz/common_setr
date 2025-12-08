@@ -1,10 +1,6 @@
 #include "pool.h"
 #include "delay.h"
 
-SemaphoreHandle_t Pool_Semph;
-
-FrecParpadeo PoolParpadeo;
-
 BaseType_t Pool_Init(Pool_t* handle) {
     BaseType_t retVal = pdTRUE;
     handle->sempahore = xSemaphoreCreateBinary();
@@ -19,6 +15,16 @@ BaseType_t Pool_Init(Pool_t* handle) {
     return retVal;
 }
 
+BaseType_t Pool_Escribir(Pool_t* handle, int value) {
+    BaseType_t retVal = pdFALSE;
+    if ( xSemaphoreTake(Pool_Semph, portMAX_DELAY) == pdTRUE) {
+        handle->data = value;
+        xSemaphoreGive(Pool_Semph);
+        retVal = pdTRUE;
+    }
+    return retVal;
+}
+
 int Pool_Leer(Pool_t* handle) {
     int retVal = -1;
     if ( xSemaphoreTake(handle->semaphore, portMAX_DELAY) == pdTRUE) {
@@ -27,6 +33,11 @@ int Pool_Leer(Pool_t* handle) {
     }
     return retVal;
 }
+
+#if(0)
+
+SemaphoreHandle_t Pool_Semph;
+FrecParpadeo PoolParpadeo;
 
 int Pool_LeerFrecRojo() {
     int retVal = -1;
@@ -46,15 +57,6 @@ int Pool_LeerFrecVerde() {
     return retVal;
 }
 
-BaseType_t Pool_Escribir(Pool_t* handle, int value) {
-    BaseType_t retVal = pdFALSE;
-    if ( xSemaphoreTake(Pool_Semph, portMAX_DELAY) == pdTRUE) {
-        handle->data = value;
-        xSemaphoreGive(Pool_Semph);
-        retVal = pdTRUE;
-    }
-    return retVal;
-}
 
 BaseType_t Pool_EscribirFrecRojo(int value) {
     BaseType_t retVal = pdFALSE;
@@ -75,3 +77,5 @@ BaseType_t Pool_EscribirFrecVerde(int value) {
     }
     return retVal;
 }
+
+#endif
