@@ -74,20 +74,33 @@ void StartGreen(void const * argument)
 
 void StartBlue(void const * argument)
 {
-  int delay = 1000;
-  for(;;)
-  {
-    // Parpadeo del LED a LF inicial
-    Blocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ);
+	  int delay = 100;
+	  CFlagState_t aux1, aux2;
 
-    // Parpadeo del LED a HF o LF según el estado de las banderas
-    if ((Flag1.state == Set) && (Flag2.state == Set))
-      Blocking_Freq(PIN_BLUE, delay, FLASH_LOW_FREQ);
-    else if ((Flag1.state == Reset) && (Flag2.state == Reset))
-      Blocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ);
-    else {
-      HAL_GPIO_WritePin(GPIOD, PIN_BLUE, GPIO_PIN_RESET);
-      osDelay(delay);
-    }
-  }
-}
+	  for(;;)
+	  {
+	    // Parpadeo del LED a LF inicial
+	    NonBlocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ);
+
+		// Parpadeo del LED a HF o LF según el estado de las banderas
+#if(1)
+		if ((Flag1.state == Set) && (Flag2.state == Set))
+			NonBlocking_Freq(PIN_BLUE, delay, FLASH_LOW_FREQ);
+
+		else if ((Flag1.state == Reset) && (Flag2.state == Reset))
+			NonBlocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ/2);
+
+#else
+	    aux1 = CFlag_Wait(&Flag1);
+	    aux2 = CFlag_Wait(&Flag2);
+	    if ((aux1 == Set) && (aux2 == Set))
+	    	NonBlocking_Freq(PIN_BLUE, delay, FLASH_LOW_FREQ);
+	    else if ((aux1 == Reset) && (aux2 == Reset))
+			NonBlocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ);
+
+#endif
+		else {
+		HAL_GPIO_WritePin(GPIOD, PIN_BLUE, GPIO_PIN_RESET);
+		osDelay(delay);
+		}
+	  }

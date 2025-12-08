@@ -16,6 +16,9 @@ void delay_ms(uint32_t ms);
 void Blocking_Flash(uint16_t pin, int duracion_ms);
 void Blocking_Freq(uint16_t pin, int duracion_ms, int);
 
+void NonBlocking_Flash(uint16_t pin, int duracion_ms);
+void NonBlocking_Freq(uint16_t pin, int duracion_ms, int);
+
 void delay_1s();
 void delay_2s_10Hz(uint16_t pin);
 void delay_4s_10Hz(uint16_t pin);

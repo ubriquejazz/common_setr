@@ -41,6 +41,27 @@ void Blocking_Freq(uint16_t pin, int duracion_ms, int period) {
 
 /*****************/
 
+void NonBlocking_Flash(uint16_t pin, int duracion_ms) {
+  int iterations = duracion_ms / 50;
+  for (int j=0; j<iterations; j++) {
+		HAL_GPIO_TogglePin(GPIOD, pin);
+		osDelay(25);			// 20 Hz = 50 ms
+  }
+  HAL_GPIO_WritePin(GPIOD, pin , GPIO_PIN_RESET);
+}
+
+void NonBlocking_Freq(uint16_t pin, int duracion_ms, int period) {
+  int iterations = duracion_ms / period;
+  for (int j=0; j<iterations; j++) {
+		HAL_GPIO_TogglePin(GPIOD, pin);
+		osDelay(period/2);
+  }
+  HAL_GPIO_WritePin(GPIOD, pin , GPIO_PIN_RESET);
+}
+
+/*****************/
+
+
 void delay_1s() {
 	delay_10Hz(0, 12); // 52765 * 12 = 633180
 }
