@@ -1,9 +1,7 @@
 #include "mailbox.h"
 
-// Definición global del handle del Mailbox
-Mailbox_t *TemperatureMailboxHandle;
-Mailbox_t *HumidityMailboxHandle;
-
+Mailbox_t TemperatureMailbox;
+Mailbox_t HumidityMailbox; 
 UART_HandleTypeDef huart2;
 
 void println(const char *msg) {
@@ -11,34 +9,19 @@ void println(const char *msg) {
 	HAL_UART_Transmit(&huart2, (uint8_t *)"\r\n", 2, HAL_MAX_DELAY);
 }
 
-
-void main(void)
+void main_init(void)
 {
-    // ... Código de configuración del sistema ...
+    // ...
+    Mailbox_Init(&TemperatureMailbox);
+    Mailbox_Init(&HumidityMailbox);
 
-    // 1. Inicializar y obtener el puntero al Mailbox
-    TemperatureMailboxHandle = Mailbox_Init();
-	HumidityMailboxHandle = Mailbox_Init();
-	if (TemperatureMailboxHandle == NULL || HumidityMailboxHandle == NULL) {
-        // ("ERROR: Fallo al inicializar uno de los Mailboxes.\n");
-        return;
-    }
+    // Crear Tarea de Adquisición y Monitoreo de Temperatura
+    osThreadNew(T_Adquisicion, &TemperatureMailbox, NULL); // Pasa el handle como argumento
+    osThreadNew(T_Monitoreo, &TemperatureMailbox, NULL);  // Pasa el handle como argumento
 
-	// 2. Crear Tarea Remitente (T_Adquisicion, Alta Prioridad)
-	// El handle (puntero) del Mailbox se pasa en el argumento 'argument'.
-	osThreadNew(T_Adquisicion, 
-				TemperatureMailboxHandle, // <-- Pasa el HANDLE aquí
-				NULL); // Parámetros de configuración del thread (prioridad, stack, etc. si no son NULL)
-
-	// 3. Crear Tarea Receptora (T_Monitoreo, Baja Prioridad)
-	// El handle también se pasa en el argumento 'argument'.
-	osThreadNew(T_Monitoreo, 
-				TemperatureMailboxHandle, // <-- Pasa el mismo HANDLE aquí
-				NULL); 
-    
-
-    // ... Código para osKernelStart() ...
-
+    // Crear Adquisición y Monitoreo de HUMEDAD usando el SEGUNDO Mailbox
+    osThreadNew(T_Monitoreo_Humedad, &HumidityMailbox, NULL); 
+    osThreadNew(T_Adquisicion_Humedad, &HumidityMailbox, NULL); 
 }
 
 void StartRed(void const * argument) {
