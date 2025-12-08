@@ -10,7 +10,7 @@ typedef struct {
     osSemaphoreId BufferEmpty_Sem;
 } Mailbox_t;
 
-Mailbox_t* Mailbox_Init();
+BaseType_t Mailbox_Init(Mailbox_t* handle);
 int Mailbox_Pend(Mailbox_t* handle); // Tarea receptora (Monitoreo)
 BaseType_t Mailbox_Post(Mailbox_t* handle, int new_temp); // Tarea remitente (Adquisicion)
 

@@ -1,14 +1,8 @@
+#include "main.h"
 #include "mailbox.h"
-#include "delay.h"
 
-// Importante: No se usa malloc/free en este ejemplo simple. Se asume que la asignación
-// de la estructura se hace estáticamente o en la inicialización del sistema.
-
-Mailbox_t* Mailbox_Init(void)
-{
-    // Asignación estática (simplificado para el ejemplo)
-    static Mailbox_t new_mailbox; 
-    Mailbox_t *mailbox_handle = &new_mailbox;
+BaseType_t Mailbox_Init(Mailbox_t* mailbox_handle) {
+	BaseType_t retVal = pdTRUE;
 
     // 1. Inicialización del Mutex (para exclusión mutua)
     mailbox_handle->Mailbox_Mutex = osMutexNew(NULL);
@@ -25,12 +19,11 @@ Mailbox_t* Mailbox_Init(void)
         mailbox_handle->BufferEmpty_Sem == NULL) 
     {
         // ("ERROR: Fallo al crear un recurso del Mailbox.\n");
-        return NULL; // Retorna NULL si falla
+        retVal = pdFALSE;
     }
 
     mailbox_handle->data = 0;
-    // ("Una instancia de Mailbox inicializada correctamente.\n");
-    return mailbox_handle; // Retorna el puntero a la nueva instancia
+    return retVal;
 }
 
 BaseType_t Mailbox_Post(Mailbox_t *mailbox_handle, int new_temp)
