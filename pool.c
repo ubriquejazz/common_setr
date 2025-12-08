@@ -19,6 +19,15 @@ BaseType_t Pool_Init(Pool_t* handle) {
     return retVal;
 }
 
+int Pool_Leer(Pool_t* handle) {
+    int retVal = -1;
+    if ( xSemaphoreTake(handle->semaphore, portMAX_DELAY) == pdTRUE) {
+        retVal = handle->data;
+        xSemaphoreGive(Pool_Semph);
+    }
+    return retVal;
+}
+
 int Pool_LeerFrecRojo() {
     int retVal = -1;
     if ( xSemaphoreTake(Pool_Semph, portMAX_DELAY) == pdTRUE) {
@@ -33,6 +42,16 @@ int Pool_LeerFrecVerde() {
     if ( xSemaphoreTake(Pool_Semph, portMAX_DELAY) == pdTRUE) {
         retVal = PoolParpadeo.FrecLEDVerde;
         xSemaphoreGive(Pool_Semph);
+    }
+    return retVal;
+}
+
+BaseType_t Pool_Escribir(Pool_t* handle, int value) {
+    BaseType_t retVal = pdFALSE;
+    if ( xSemaphoreTake(Pool_Semph, portMAX_DELAY) == pdTRUE) {
+        handle->data = value;
+        xSemaphoreGive(Pool_Semph);
+        retVal = pdTRUE;
     }
     return retVal;
 }
