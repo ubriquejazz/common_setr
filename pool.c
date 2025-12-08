@@ -5,15 +5,16 @@ SemaphoreHandle_t Pool_Semph;
 
 FrecParpadeo PoolParpadeo;
 
-BaseType_t Pool_Init() {
+BaseType_t Pool_Init(Pool_t* handle) {
     BaseType_t retVal = pdTRUE;
-    Pool_Semph = xSemaphoreCreateBinary();
-    if (Pool_Semph == NULL)
+    handle->sempahore = xSemaphoreCreateBinary();
+    if (handle->semaphore == NULL)
         // insufficient heap memory
         retVal = pdFALSE;
     else {
-        PoolParpadeo.FrecLEDVerde = FLASH_LOW_FREQ;
-        PoolParpadeo.FrecLEDRojo = FLASH_HIGH_FREQ;
+        handle->data = FLASH_LOW_FREQ;
+        //PoolParpadeo.FrecLEDVerde = FLASH_LOW_FREQ;
+        //PoolParpadeo.FrecLEDRojo = FLASH_HIGH_FREQ;
     }
     return retVal;
 }

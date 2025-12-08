@@ -10,7 +10,15 @@ typedef struct
 }
 FrecParpadeo;
 
-BaseType_t Pool_Init();
+typedef struct {
+    SemaphoreHandle_t semaphore;
+    int data;
+} Pool_t;
+
+BaseType_t Pool_Init(Pool_t* handle);
+BaseType_t Pool_Escribir(Pool_t* handle, int value);
+int Pool_Leer(Pool_t* handle);
+
 BaseType_t Pool_EscribirFrecRojo(int);
 BaseType_t Pool_EscribirFrecVerde(int);
 
