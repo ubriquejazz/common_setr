@@ -22,26 +22,24 @@ void println(const char *msg) {
 void main() {
     // ...
     Pool_Init(&FreqGreen);
-    Pool_Init(&FreqRed);
+    if (Pool_Init(&FreqRed) == pdFALSE) {
+	  HAL_GPIO_WritePin(GPIOD, PIN_ORANGE , GPIO_PIN_RESET);
+	  return;
+    }
 
 }
 
 void StartCtrl() {
-    // Cambio de parpadeo  del LED verde a 1Hz 
-    // Cambio de parpadeo  del LED rojo a 10Hz 
-    Pool_Escribir(&FreqRed, 10);
-    Pool_Escribir(&FreqGreen, 1);
-    osDelay(8000);
+  for(;;)
+  {
+	    Pool_Escribir(&FreqRed, FLASH_HIGH_FREQ);
+	    Pool_Escribir(&FreqGreen, FLASH_LOW_FREQ);
+	    osDelay(8000);
 
-    // Cambio de parpadeo  del LED verde a 10Hz 
-    // Cambio de parpadeo  del LED rojo a 1Hz 
-
-    Pool_Escribir(&FreqRed, 1);
-    // Pool_EscribirFrecRojo(1);
-
-    Pool_Escribir(&FreqGreen, 10);
-    // Pool_EscribirFrecVerde(10);
-    osDelay(8000);
+	    Pool_Escribir(&FreqRed, FLASH_LOW_FREQ);
+	    Pool_Escribir(&FreqGreen, FLASH_HIGH_FREQ);
+	    osDelay(8000);
+  }
 }
 
 void StartGreen(void const * argument) {
@@ -49,10 +47,13 @@ void StartGreen(void const * argument) {
     char msg[50];
     for(;;)
     {
-    sprintf(msg, "Green: %d", freq); println(msg);
-    //Blocking_Freq(PIN_GREEN, 10000, freq);
-    freq = Pool_Leer(&FreqGreen); // Pool_LeerFrecVerde();
-    osDelay(9500);
+        sprintf(msg, "Green: %d", freq); println(msg);
+		freq = Pool_Leer(&FreqGreen);
+		if (freq < 0) {
+			  HAL_GPIO_WritePin(GPIOD, PIN_GREEN , GPIO_PIN_RESET);
+			  vTaskSuspend(NULL);
+		}
+		osDelay(9500);
     }
 }
 
