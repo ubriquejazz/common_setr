@@ -4,14 +4,14 @@
 #include "cmsis_os.h"
 
 typedef struct {
-    int temperature_data;
+    int data;
     osMutexId Mailbox_Mutex;
     osSemaphoreId DataAvailable_Sem;
     osSemaphoreId BufferEmpty_Sem;
 } Mailbox_t;
 
-BaseType_t Mailbox_Init(MBox_T* handle);
-int Mailbox_Pend(MBox_T* handle); // Tarea receptora (Monitoreo)
-BaseType_t Mailbox_Post((MBox_T* handle, int new_temp); // Tarea remitente (Adquisicion)
+Mailbox_t* Mailbox_Init();
+int Mailbox_Pend(Mailbox_t* handle); // Tarea receptora (Monitoreo)
+BaseType_t Mailbox_Post(Mailbox_t* handle, int new_temp); // Tarea remitente (Adquisicion)
 
 #endif

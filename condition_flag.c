@@ -5,7 +5,7 @@ BaseType_t CondFlag_Init(CondFlag_T* flag_handle) {
 	BaseType_t retVal = pdTRUE;
 
     flag_handle->semaphore = xSemaphoreCreateBinary();
-    if (lag_handle->semaphore == NULL)
+    if (flag_handle->semaphore == NULL)
         // insufficient heap memory
         retVal = pdFALSE;
     else {
@@ -41,7 +41,7 @@ BaseType_t CondFlag_Clear(CondFlag_T* flag_handle) {
 }
    
 // Waits for the flag to be set (takes the semaphore).
-BaseType_t CondFlag_Wait(CondFlag_T flag) {
+BaseType_t CondFlag_Wait(CondFlag_T* flag) {
 	BaseType_t retVal;
     retVal = xSemaphoreTake(flag->semaphore, portMAX_DELAY);
     if ( retVal == pdTRUE) {

@@ -77,18 +77,17 @@ void StartBlue(void const * argument)
   int delay = 1000;
   for(;;)
   {
-	  // Parpadeo del LED a HF
+    // Parpadeo del LED a LF inicial
+    Blocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ);
+
+	  // Parpadeo del LED a HF o LF según el estado de las banderas
 	  if ((Flag1 == Set) && (Flag2 == Set))
-		Blocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ);
-
-	  // Parpadeo del LED a LF
+  		Blocking_Freq(PIN_BLUE, delay, FLASH_LOW_FREQ);
 	  else if ((Flag1 == Reset) && (Flag2 == Reset))
-		Blocking_Freq(PIN_BLUE, delay, FLASH_LOW_FREQ);
-
-	  // Do nothing otherwise
-	  else {
-		HAL_GPIO_WritePin(GPIOD, PIN_BLUE, GPIO_PIN_RESET);
-		osDelay(delay);
+	  	Blocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ);
+    else {
+  		HAL_GPIO_WritePin(GPIOD, PIN_BLUE, GPIO_PIN_RESET);
+	  	osDelay(delay);
 	  }
 
   }
