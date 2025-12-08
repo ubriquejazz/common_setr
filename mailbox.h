@@ -3,10 +3,15 @@
 
 #include "cmsis_os.h"
 
-typedef enum {Set, Reset} MBox_T;
+typedef struct {
+    int temperature_data;
+    osMutexId Mailbox_Mutex;
+    osSemaphoreId DataAvailable_Sem;
+    osSemaphoreId BufferEmpty_Sem;
+} Mailbox_t;
 
-BaseType_t MBox_Init(MBox_T* handle);
-BaseType_t MBox_Set(MBox_T* handle);
-BaseType_t MBox_Clear(MBox_T* handle);
+BaseType_t Mailbox_Init(MBox_T* handle);
+int Mailbox_Pend(MBox_T* handle); // Tarea receptora (Monitoreo)
+BaseType_t Mailbox_Post((MBox_T* handle, int new_temp); // Tarea remitente (Adquisicion)
 
 #endif
