@@ -26,9 +26,7 @@ void main() {
 
 }
 
-
 void StartCtrl() {
-
     // Cambio de parpadeo  del LED verde a 1Hz 
     // Cambio de parpadeo  del LED rojo a 10Hz 
     Pool_Escribir(&FreqRed, 10);

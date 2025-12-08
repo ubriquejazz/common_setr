@@ -1,7 +1,4 @@
 #include "delay.h"
-#include "condition_flag.h"
-
-CondFlag_T Flag1, Flag2;
 
 osThreadId RedTaskHandle;
 osThreadId GreenTaskHandle;
