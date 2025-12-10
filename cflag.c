@@ -11,6 +11,7 @@ BaseType_t CFlag_Init(CFlag_t* handle) {
         retVal = pdFALSE;
     else {
         handle->state = Reset;
+        xSemaphoreGive(miSemaforo);
     }
     return retVal;
 }
@@ -21,13 +22,14 @@ BaseType_t CFlag_Set(CFlag_t* handle) {
     	return pdFALSE; // Validación básica
 
 	BaseType_t retVal = pdTRUE;
-    if (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING) {
+    // (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING) {
+    if (xSemaphoreTake(miSemaforo, portMAX_DELAY) == pdTRUE) {
+        handle->state = Set;
         xSemaphoreGive(miSemaforo);
     } else {
         // If the scheduler hasn't started
         retVal = pdFALSE;
     }
-    handle->state = Set;
     return retVal;
 }
 
@@ -37,13 +39,14 @@ BaseType_t CFlag_Clear(CFlag_t* handle) {
     	return pdFALSE; // Validación básica
 
  	BaseType_t retVal = pdTRUE;
-    if (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING) {
+    // (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING) {
+    if ( xSemaphoreTake(miSemaforo, portMAX_DELAY) == pdTRUE) {
+        handle->state = Reset;
         xSemaphoreGive(miSemaforo);
     } else {
         // If the scheduler hasn't started
         retVal = pdFALSE;
     }
-    handle->state = Reset;
     return retVal;
 }
    
@@ -51,7 +54,5 @@ BaseType_t CFlag_Clear(CFlag_t* handle) {
 CFlagState_t CFlag_Wait(CFlag_t* handle) {
     if (handle == NULL)
     	return Error; // Validación básica
-
-    xSemaphoreTake(miSemaforo, portMAX_DELAY);
     return handle->state;
 }

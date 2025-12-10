@@ -13,8 +13,7 @@ BaseType_t Pool_Init(Pool_t* handle, int threshold) {
     else {
         handle->data = 0;
         handle->threshold = threshold;
-        //PoolParpadeo.FrecLEDVerde = FLASH_LOW_FREQ;
-        //PoolParpadeo.FrecLEDRojo = FLASH_HIGH_FREQ;
+        xSemaphoreGive(miSemaforo);
     }
     return retVal;
 }
