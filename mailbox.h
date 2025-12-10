@@ -1,13 +1,9 @@
 #ifndef MAILBOX_H
 #define MAILBOX_H
 
-#include "cmsis_os.h"
-
 typedef struct {
     int data;
-    osMutexId Mailbox_Mutex;
-    osSemaphoreId DataAvailable_Sem;
-    osSemaphoreId BufferEmpty_Sem;
+    float patatas;
 } Mailbox_t;
 
 BaseType_t Mailbox_Init(Mailbox_t* handle);

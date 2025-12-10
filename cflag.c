@@ -1,10 +1,13 @@
 #include "main.h"
 #include "cflag.h"
+#include "cmsis_os.h"
+
+static SemaphoreHandle_t miSemaforo;
 
 BaseType_t CFlag_Init(CFlag_t* handle) {
 	BaseType_t retVal = pdTRUE;
-    handle->semaphore = xSemaphoreCreateBinary();
-    if (handle->semaphore == NULL)
+    miSemaforo = xSemaphoreCreateBinary();
+    if (miSemaforo == NULL)
         // insufficient heap memory
         retVal = pdFALSE;
     else {
@@ -15,9 +18,12 @@ BaseType_t CFlag_Init(CFlag_t* handle) {
 
 // Sets the flag and gives the semaphore, unblocking a waiting task
 BaseType_t CFlag_Set(CFlag_t* handle) {
+    if (handle == NULL)
+    	return pdFALSE; // Validación básica
+
 	BaseType_t retVal = pdTRUE;
     if (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING) {
-        xSemaphoreGive(handle->semaphore);
+        xSemaphoreGive(miSemaforo);
     } else {
         // If the scheduler hasn't started
         retVal = pdFALSE;
@@ -28,9 +34,12 @@ BaseType_t CFlag_Set(CFlag_t* handle) {
 
 // Clears the flag and gives the semaphore, unblocking ...
 BaseType_t CFlag_Clear(CFlag_t* handle) {
+    if (handle == NULL)
+    	return pdFALSE; // Validación básica
+
  	BaseType_t retVal = pdTRUE;
     if (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING) {
-        xSemaphoreGive(handle->semaphore);
+        xSemaphoreGive(miSemaforo);
     } else {
         // If the scheduler hasn't started
         retVal = pdFALSE;
@@ -40,7 +49,10 @@ BaseType_t CFlag_Clear(CFlag_t* handle) {
 }
    
 // Waits for the flag to be set (takes the semaphore).
-CFlagState_t CFlag_Wait(CFlag_t* flag) {
-    xSemaphoreTake(flag->semaphore, portMAX_DELAY);
-    return flag->flag_state;
+CFlagState_t CFlag_Wait(CFlag_t* handle) {
+    if (handle == NULL)
+    	return Error; // Validación básica
+
+    xSemaphoreTake(miSemaforo, portMAX_DELAY);
+    return handle->flag_state;
 }
