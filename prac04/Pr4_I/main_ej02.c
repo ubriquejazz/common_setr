@@ -42,6 +42,7 @@ void StartBlue(void const * argument)
 
     osSignalSet(GreenTaskHandle, 1);
     HAL_Delay(6000);
+    
 		osSignalSet(RedTaskHandle, 1);
     HAL_Delay(6000);
   }
