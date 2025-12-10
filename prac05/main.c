@@ -4,6 +4,9 @@ Mailbox_t TemperatureMailbox;
 Mailbox_t HumidityMailbox; 
 UART_HandleTypeDef huart2;
 
+osThreadId T_Adquisicion_Temp, T_Adquisicion_Humedad;
+osThreadId T_Monitoreo_Temp, T_Monitoreo_Humedad;
+
 void println(const char *msg) {
 	HAL_UART_Transmit(&huart2, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
 	HAL_UART_Transmit(&huart2, (uint8_t *)"\r\n", 2, HAL_MAX_DELAY);
@@ -16,8 +19,8 @@ void main_init(void)
     Mailbox_Init(&HumidityMailbox);
 
     // Crear Tarea de Adquisición y Monitoreo de Temperatura
-    osThreadNew(T_Adquisicion, &TemperatureMailbox, NULL); // Pasa el handle como argumento
-    osThreadNew(T_Monitoreo, &TemperatureMailbox, NULL);  // Pasa el handle como argumento
+    osThreadNew(T_Adquisicion_Temp, &TemperatureMailbox, NULL); // Pasa el handle como argumento
+    osThreadNew(T_Monitoreo_Temp, &TemperatureMailbox, NULL);  // Pasa el handle como argumento
 
     // Crear Adquisición y Monitoreo de HUMEDAD usando el SEGUNDO Mailbox
     osThreadNew(T_Monitoreo_Humedad, &HumidityMailbox, NULL); 
@@ -36,7 +39,7 @@ void StartRed(void const * argument) {
 }
 
 // Ejemplo de cómo T_Monitoreo recibiría y usaría el handle:
-void T_Monitoreo(void *argument)
+void T_Monitoreo_Temp(void *argument)
 {
     Mailbox_t *my_mailbox = (Mailbox_t *)argument; // Castea el argumento a nuestro tipo
     int received_data;
@@ -70,7 +73,7 @@ void T_Monitoreo_Humedad(void *argument)
 
 /* ******************** */
 
-void T_Adquisicion(void *argument)
+void T_Adquisicion_Temp(void *argument)
 {
     // 1. Recibe y castea el argumento al tipo de puntero de Mailbox
     Mailbox_t *my_mailbox = (Mailbox_t *)argument; 
