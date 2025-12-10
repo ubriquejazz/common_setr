@@ -1,11 +1,13 @@
 #ifndef CFLAG_H
 #define CFLAG_H
 
+#include "cmsis_os.h"
+
 typedef enum {Set, Reset, Error} CFlagState_t;
 
 typedef struct {
     int data;
-    CFlagState_t flag_state;
+    CFlagState_t state;
 } CFlag_t;
 
 BaseType_t CFlag_Init(CFlag_t* handle);

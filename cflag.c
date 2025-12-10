@@ -1,6 +1,5 @@
-#include "main.h"
 #include "cflag.h"
-#include "cmsis_os.h"
+#include "main.h"
 
 static SemaphoreHandle_t miSemaforo;
 
@@ -11,7 +10,7 @@ BaseType_t CFlag_Init(CFlag_t* handle) {
         // insufficient heap memory
         retVal = pdFALSE;
     else {
-        handle->flag_state = Reset;
+        handle->state = Reset;
     }
     return retVal;
 }
@@ -28,7 +27,7 @@ BaseType_t CFlag_Set(CFlag_t* handle) {
         // If the scheduler hasn't started
         retVal = pdFALSE;
     }
-    handle->flag_state = Set;
+    handle->state = Set;
     return retVal;
 }
 
@@ -44,7 +43,7 @@ BaseType_t CFlag_Clear(CFlag_t* handle) {
         // If the scheduler hasn't started
         retVal = pdFALSE;
     }
-    handle->flag_state = Reset;
+    handle->state = Reset;
     return retVal;
 }
    
@@ -54,5 +53,5 @@ CFlagState_t CFlag_Wait(CFlag_t* handle) {
     	return Error; // Validación básica
 
     xSemaphoreTake(miSemaforo, portMAX_DELAY);
-    return handle->flag_state;
+    return handle->state;
 }
