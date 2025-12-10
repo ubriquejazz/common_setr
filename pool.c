@@ -5,6 +5,9 @@
 static SemaphoreHandle_t miSemaforo;
 
 BaseType_t Pool_Init(Pool_t* handle) {
+    if (handle == NULL)
+    	return pdFALSE; // Validación básica
+
     BaseType_t retVal = pdTRUE;
     miSemaforo= xSemaphoreCreateBinary();
     if (miSemaforo== NULL)
@@ -19,6 +22,9 @@ BaseType_t Pool_Init(Pool_t* handle) {
 }
 
 BaseType_t Pool_Escribir(Pool_t* handle, int data) {
+    if (handle == NULL)
+    	return pdFALSE; // Validación básica
+
     BaseType_t retVal = pdFALSE;
     if ( xSemaphoreTake(miSemaforo, portMAX_DELAY) == pdTRUE) {
         handle->data = data;
@@ -30,6 +36,9 @@ BaseType_t Pool_Escribir(Pool_t* handle, int data) {
 
 int Pool_Leer(Pool_t* handle) {
     int retVal = -1;
+    if (handle == NULL)
+    	return retVal;
+
     if ( xSemaphoreTake(miSemaforo, portMAX_DELAY) == pdTRUE) {
         retVal = handle->data;
         xSemaphoreGive(miSemaforo);

@@ -1,7 +1,7 @@
 #ifndef CFLAG_H
 #define CFLAG_H
 
-typedef enum {Set, Reset} CFlagState_t;
+typedef enum {Set, Reset, Error} CFlagState_t;
 
 typedef struct {
     int data;
