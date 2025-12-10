@@ -1,10 +1,13 @@
 #include "pool.h"
 #include "delay.h"
+#include "cmsis_os.h"
+
+static SemaphoreHandle_t miSemaforo;
 
 BaseType_t Pool_Init(Pool_t* handle) {
     BaseType_t retVal = pdTRUE;
-    handle->semaphore = xSemaphoreCreateBinary();
-    if (handle->semaphore == NULL)
+    miSemaforo= xSemaphoreCreateBinary();
+    if (miSemaforo== NULL)
         // insufficient heap memory
         retVal = pdFALSE;
     else {
@@ -15,11 +18,11 @@ BaseType_t Pool_Init(Pool_t* handle) {
     return retVal;
 }
 
-BaseType_t Pool_Escribir(Pool_t* handle, int value) {
+BaseType_t Pool_Escribir(Pool_t* handle, int data) {
     BaseType_t retVal = pdFALSE;
-    if ( xSemaphoreTake(handle->semaphore, portMAX_DELAY) == pdTRUE) {
-        handle->data = value;
-        xSemaphoreGive(handle->semaphore);
+    if ( xSemaphoreTake(miSemaforo, portMAX_DELAY) == pdTRUE) {
+        handle->data = data;
+        xSemaphoreGive(miSemaforo);
         retVal = pdTRUE;
     }
     return retVal;
@@ -27,9 +30,9 @@ BaseType_t Pool_Escribir(Pool_t* handle, int value) {
 
 int Pool_Leer(Pool_t* handle) {
     int retVal = -1;
-    if ( xSemaphoreTake(handle->semaphore, portMAX_DELAY) == pdTRUE) {
+    if ( xSemaphoreTake(miSemaforo, portMAX_DELAY) == pdTRUE) {
         retVal = handle->data;
-        xSemaphoreGive(handle->semaphore);
+        xSemaphoreGive(miSemaforo);
     }
     return retVal;
 }

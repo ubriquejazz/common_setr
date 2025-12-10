@@ -6,13 +6,8 @@ osThreadId RedTaskHandle;
 osThreadId GreenTaskHandle;
 osThreadId OrangeTaskHandle;
 
-#if(0)
-osMutexId myMutexHandle;
-osSemaphoreId mySemHandle;
-#else
 Pool_t FreqRed;
 Pool_t FreqGreen;
-#endif
 
 void println(const char *msg) {
 	HAL_UART_Transmit(&huart2, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
@@ -22,10 +17,7 @@ void println(const char *msg) {
 void main() {
     // ...
     Pool_Init(&FreqGreen);
-    if (Pool_Init(&FreqRed) == pdFALSE) {
-	  HAL_GPIO_WritePin(GPIOD, PIN_ORANGE , GPIO_PIN_RESET);
-	  return;
-    }
+    Pool_Init(&FreqRed);
 
 }
 
@@ -49,10 +41,6 @@ void StartGreen(void const * argument) {
     {
         sprintf(msg, "Green: %d", freq); println(msg);
 		freq = Pool_Leer(&FreqGreen);
-		if (freq < 0) {
-			  HAL_GPIO_WritePin(GPIOD, PIN_GREEN , GPIO_PIN_RESET);
-			  vTaskSuspend(NULL);
-		}
 		osDelay(9500);
     }
 }
