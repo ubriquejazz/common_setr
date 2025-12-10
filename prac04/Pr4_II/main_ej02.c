@@ -1,15 +1,51 @@
+#include "delay.h"
+#include "cmsis_os.h"
 
-semaphore Azul2Verde, Azul2Rojo
+osThreadId RedTaskHandle;
+osThreadId GreenTaskHandle;
+osThreadId BlueTaskHandle;
 
+SemaphoreHandle_t Sync1, Sync2;
 
-void StartRed() {
+void main() {
 
-    osSemaphoreWait(Azul2Rojo, portMAX_DELAY);
-    Blocking_Freq(PIN_RED, 5000, 10);
+  MX_GPIO_Init();
+
+  Sync1 = xSemaphoreCreateBinary();
+  Sync2 = xSemaphoreCreateBinary();
+
 }
 
-void StartGreen() {
+void StartGreen(void const * argument)
+{
+  for(;;)
+  {
+    NonBlocking_Freq(PIN_GREEN, 5000, FLASH_HIGH_FREQ);
 
-    osSemaphoreWait(Azul2Verde, portMAX_DELAY);
-    Blocking_Freq(PIN_GREEN, 5000, 10);
+    // SYNC1: request
+    osSemaphoreWait(Sync1, portMAX_DELAY);
+
+    NonBlocking_Freq(PIN_GREEN, 10000, FLASH_LOW_FREQ);
+
+    // SYNC2: ack
+    osSemaphoreRelease(Sync2);
+    vTaskSuspend(NULL);
+  }
+}
+
+void StartRed(void const * argument)
+{
+  for(;;)
+  {
+  
+    NonBlocking_Freq(PIN_RED, 10000, FLASH_LOW_FREQ);
+
+    // SYNC1: ack
+    osSemaphoreRelease(Sync1);
+    NonBlocking_Freq(PIN_RED, 5000, FLASH_HIGH_FREQ);
+
+    // SYNC2: request
+    osSemaphoreWait(Sync2, portMAX_DELAY);
+    vTaskSuspend(NULL);
+  }
 }

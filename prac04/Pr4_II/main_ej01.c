@@ -16,23 +16,26 @@ void main() {
 
 }
 
-void StartRed() {
+void StartRed(void const * argument)
+{
   for(;;)
   {
     osSemaphoreWait(Azul2Rojo, portMAX_DELAY);
-    Blocking_Freq(PIN_RED, 5000, FLASH_HIGH_FREQ);
+    NonBlocking_Freq(PIN_RED, 5000, FLASH_HIGH_FREQ);
   }
 }
 
-void StartGreen() {
+void StartGreen(void const * argument)
+{
   for(;;)
   {
     osSemaphoreWait(Azul2Verde, portMAX_DELAY);
-    Blocking_Freq(PIN_GREEN, 5000, FLASH_HIGH_FREQ);
+    NonBlocking_Freq(PIN_GREEN, 5000, FLASH_HIGH_FREQ);
   }
 }
 
-void StartBlue() {
+void StartBlue(void const * argument)
+{
   for(;;)
   {
     // Parpadeo de 1Hz durante 10s
