@@ -1,12 +1,9 @@
 #include "pool.h"
 #include "delay.h"
-#include "cmsis_os.h"
 
-static SemaphoreHandle_t miSemaforo;
+SemaphoreHandle_t miSemaforo = NULL;
 
-BaseType_t Pool_Init(Pool_t* handle) {
-    if (handle == NULL)
-    	return pdFALSE; // Validación básica
+BaseType_t Pool_Init(Pool_t* handle, int threshold) {
 
     BaseType_t retVal = pdTRUE;
     miSemaforo= xSemaphoreCreateBinary();
@@ -14,7 +11,8 @@ BaseType_t Pool_Init(Pool_t* handle) {
         // insufficient heap memory
         retVal = pdFALSE;
     else {
-        handle->data = FLASH_LOW_FREQ;
+        handle->data = 0;
+        handle->threshold = threshold;
         //PoolParpadeo.FrecLEDVerde = FLASH_LOW_FREQ;
         //PoolParpadeo.FrecLEDRojo = FLASH_HIGH_FREQ;
     }
