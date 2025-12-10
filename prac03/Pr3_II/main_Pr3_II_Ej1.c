@@ -5,9 +5,15 @@
 osMutexId myMutexHandle;
 osSemaphoreId mySemHandle;
 
+void main() {
+
+  // ....
+
+}
+
 void seccion_critica(int pin) {
   HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_SET);
-  delay_2s_10Hz(PIN_BLUE);
+  Blocking_Freq(PIN_BLUE, 2000, FLASH_LOW_FREQ);
   HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_RESET);
 }
 
@@ -27,7 +33,6 @@ void helper(int pin, int mutex) {
     osSemaphoreRelease(mySemHandle);
 }
 
-
 /* USER CODE BEGIN Header_StartParpLEDVerde */
 /**
   * @brief  Function implementing the ParpLEDVerde thread.
@@ -39,13 +44,12 @@ void StartParpLEDVerde(void const * argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
-
-for(;;)
-{
-helper(PIN_GREEN, USE_MUTEX);
-delay_4s_10Hz(PIN_GREEN);
-vTaskSuspend(NULL);
-}
+  for(;;)
+  {
+  helper(PIN_GREEN, USE_MUTEX);
+  Blocking_Freq(PIN_GREEN, 4000, FLASH_LOW_FREQ);
+  vTaskSuspend(NULL);
+  }
   /* USER CODE END 5 */ 
 }
 
@@ -60,14 +64,13 @@ void StartParpLEDRojo(void const * argument)
 {
   /* USER CODE BEGIN StartParpLEDRojo */
   /* Infinite loop */
-
-osDelay(1000);
-for(;;)
-{
-helper(PIN_RED, USE_MUTEX);
-delay_4s_10Hz(PIN_RED);
-vTaskSuspend(NULL);
-}
+  osDelay(1000);
+  for(;;)
+  {
+  helper(PIN_RED, USE_MUTEX);
+  Blocking_Freq(PIN_RED, 4000, FLASH_LOW_FREQ);
+  vTaskSuspend(NULL);
+  }
   /* USER CODE END StartParpLEDRojo */
 }
 
@@ -82,11 +85,11 @@ void StartParpLEDNaranja(void const * argument)
 {
   /* USER CODE BEGIN StartParpLEDNaranja */
   /* Infinite loop */
-osDelay(1000);
-for(;;)
-{
-delay_4s_10Hz(PIN_ORANGE);
-vTaskSuspend(NULL);
-}
+  osDelay(1000);
+  for(;;)
+  {
+  Blocking_Freq(PIN_ORANGE, 4000, FLASH_LOW_FREQ);
+  vTaskSuspend(NULL);
+  }
   /* USER CODE END StartParpLEDNaranja */
 }

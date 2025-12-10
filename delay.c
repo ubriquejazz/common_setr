@@ -65,12 +65,4 @@ void NonBlocking_Freq(uint16_t pin, int duracion_ms, int period) {
 void delay_1s() {
 	delay_10Hz(0, 12); // 52765 * 12 = 633180
 }
-void delay_2s_10Hz(uint16_t pin) {
-	Blocking_Freq(pin, 2000, FLASH_LOW_FREQ);
-	// delay_10Hz(pin, 50);
-}
 
-void delay_4s_10Hz(uint16_t pin) {
-	// delay_10Hz(pin, 100);
-	Blocking_Freq(pin, 4000, FLASH_LOW_FREQ);
-}
