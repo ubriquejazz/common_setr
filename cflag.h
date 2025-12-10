@@ -7,7 +7,7 @@ typedef enum {Set, Reset} CFlagState_t;
 
 typedef struct {
     SemaphoreHandle_t semaphore;
-    CFlagState_t state; // 
+    CFlagState_t flag_state; // 
 } CFlag_t;
 
 BaseType_t CFlag_Init(CFlag_t* handle);

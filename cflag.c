@@ -8,7 +8,7 @@ BaseType_t CFlag_Init(CFlag_t* handle) {
         // insufficient heap memory
         retVal = pdFALSE;
     else {
-        handle->state = Reset;
+        handle->flag_state = Reset;
     }
     return retVal;
 }
@@ -22,7 +22,7 @@ BaseType_t CFlag_Set(CFlag_t* handle) {
         // If the scheduler hasn't started
         retVal = pdFALSE;
     }
-    handle->state = Set;
+    handle->flag_state = Set;
     return retVal;
 }
 
@@ -35,12 +35,12 @@ BaseType_t CFlag_Clear(CFlag_t* handle) {
         // If the scheduler hasn't started
         retVal = pdFALSE;
     }
-    handle->state = Reset;
+    handle->flag_state = Reset;
     return retVal;
 }
    
 // Waits for the flag to be set (takes the semaphore).
 CFlagState_t CFlag_Wait(CFlag_t* flag) {
     xSemaphoreTake(flag->semaphore, portMAX_DELAY);
-    return flag->state;
+    return flag->flag_state;
 }
