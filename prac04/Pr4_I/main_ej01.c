@@ -1,5 +1,5 @@
-#include "delay.h"
-#include "cflag.h"
+#include "../delay.h"
+#include "../cflag.h"
 
 CFlag_T Flag1, Flag2;
 
@@ -81,23 +81,20 @@ void StartBlue(void const * argument)
   {
 		// Parpadeo del LED según el estado de las banderas
     // 10 Hz es HF, 1 Hz es LF
-#if(0)
-	    aux1 = CFlag_Wait(&Flag1);
-	    aux2 = CFlag_Wait(&Flag2);
-	    if ((aux1 == Set) && (aux2 == Set))
-	    	NonBlocking_Freq(PIN_BLUE, delay, FLASH_LOW_FREQ);
-	    else if ((aux1 == Reset) && (aux2 == Reset))
-			NonBlocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ);
 
-#endif
-		
-  if ((Flag1.state == Set) && (Flag2.state == Set))
-    NonBlocking_Freq(PIN_BLUE, delay, FLASH_LOW_FREQ);
+    aux1 = Flag1.state; // CFlag_Wait(&Flag1);
+    aux2 = Flag2.state; // CFlag_Wait(&Flag2);
 
-  else if ((Flag1.state == Reset) && (Flag2.state == Reset))
-    NonBlocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ/2);
-
-  else {
-    NonBlocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ);
-  }
+		if ((aux1 == Set) && (aux2 == Set)) {
+			HAL_GPIO_WritePin(GPIOD, PIN_BLUE , GPIO_PIN_SET);
+	    	//NonBlocking_Freq(PIN_BLUE, delay, FLASH_LOW_FREQ);
+		}
+		else if ((aux1 == Reset) && (aux2 == Reset)) {
+			HAL_GPIO_WritePin(GPIOD, PIN_BLUE , GPIO_PIN_RESET);
+			//NonBlocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ);
+		}
+		else {
+		    NonBlocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ);
+		  }
+	  }
 }

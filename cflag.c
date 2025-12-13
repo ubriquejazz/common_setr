@@ -1,5 +1,6 @@
+// cflag.c used in prac04A/main_ej01.c
+
 #include "cflag.h"
-#include "main.h"
 
 static SemaphoreHandle_t miSemaforo;
 

@@ -1,4 +1,5 @@
-#include "delay.h"
+#include "../delay.h"
+
 #define USE_MUTEX 1
 
 osMutexId myMutexHandle;
