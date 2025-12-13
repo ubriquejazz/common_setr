@@ -1,5 +1,4 @@
 // cflag.c used in prac04A/main_ej01.c
-
 #include "cflag.h"
 
 static SemaphoreHandle_t miSemaforo;
@@ -26,6 +25,7 @@ BaseType_t CFlag_Set(CFlag_t* handle) {
     // (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING) {
     if (xSemaphoreTake(miSemaforo, portMAX_DELAY) == pdTRUE) {
         handle->state = Set;
+        handle->data = 1001;
         xSemaphoreGive(miSemaforo);
     } else {
         // If the scheduler hasn't started
@@ -43,6 +43,7 @@ BaseType_t CFlag_Clear(CFlag_t* handle) {
     // (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING) {
     if ( xSemaphoreTake(miSemaforo, portMAX_DELAY) == pdTRUE) {
         handle->state = Reset;
+        handle->data = 0;
         xSemaphoreGive(miSemaforo);
     } else {
         // If the scheduler hasn't started
@@ -52,8 +53,6 @@ BaseType_t CFlag_Clear(CFlag_t* handle) {
 }
    
 // Waits for the flag to be set (takes the semaphore).
-CFlagState_t CFlag_Wait(CFlag_t* handle) {
-    if (handle == NULL)
-    	return Error; // Validación básica
-    return handle->state;
+CFlagState_t CFlag_Wait(CFlag_t flag) {
+    return flag.state;
 }
