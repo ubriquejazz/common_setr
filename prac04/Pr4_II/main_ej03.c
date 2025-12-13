@@ -19,20 +19,20 @@ void print_msg() {
 void Pool_Test() {
 	if (Pool_Init(&FreqGreen, 0) == pdTRUE)
 	if (Pool_Escribir(&FreqGreen, HIG_FREQ) == pdTRUE)
-		sprintf(huart2_msg, "Pool value: %d", Pool_Leer(FreqGreen));
+		sprintf(huart2_msg, "GREEN value: %d", Pool_Leer(FreqGreen));
 	else
-		sprintf(huart2_msg, "Cant write");
+		sprintf(huart2_msg, "GREEN: Cant write!");
 	else
-	  sprintf(huart2_msg, "No pool, no summer!");
+	  sprintf(huart2_msg, "GREEN:No initialized!");
 	print_msg();
 
 	if (Pool_Init(&FreqRed, 0) == pdTRUE)
 	if (Pool_Escribir(&FreqRed, LOW_FREQ) == pdTRUE)
-		sprintf(huart2_msg, "Pool value: %d", Pool_Leer(FreqRed));
+		sprintf(huart2_msg, "RED value: %d", Pool_Leer(FreqRed));
 	else
-		sprintf(huart2_msg, "Cant write");
+		sprintf(huart2_msg, "RED: Cant write");
 	else
-	  sprintf(huart2_msg, "No pool, no summer!");
+	  sprintf(huart2_msg, "RED:No initialized!");
 	print_msg();
 }
 
@@ -57,7 +57,7 @@ void StartCtrl() {
 }
 
 void StartGreen(void const * argument) {
-    int delay_ms = 9500;
+    int duracion_ms = 9500;
     for(;;)
     {
         Blocking_Freq(PIN_GREEN, duracion_ms, Pool_Leer(FreqGreen));
@@ -66,7 +66,7 @@ void StartGreen(void const * argument) {
 }
 
 void StartRed(void const * argument) {
-    int delay_ms = 5500;
+    int duracion_ms = 5500;
     for(;;)
     {
         Blocking_Freq(PIN_RED, duracion_ms, Pool_Leer(FreqRed));
