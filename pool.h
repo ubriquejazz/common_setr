@@ -10,6 +10,6 @@ typedef struct {
 
 BaseType_t Pool_Init(Pool_t* handle, int threshold);
 BaseType_t Pool_Escribir(Pool_t* handle, int data);
-int Pool_Leer(Pool_t* handle);
+int Pool_Leer(Pool_t);
 
 #endif // POOL_H
