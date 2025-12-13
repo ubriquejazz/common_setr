@@ -8,8 +8,8 @@
 #define PIN_GREEN       GPIO_PIN_12
 #define PIN_BLUE        GPIO_PIN_15
 
-#define FLASH_HIGH_FREQ		60
-#define FLASH_LOW_FREQ		180
+#define HIG_FREQ		60
+#define LOW_FREQ		180
 
 void delay_ms(uint32_t ms);
 

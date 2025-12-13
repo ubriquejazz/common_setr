@@ -15,7 +15,7 @@ void StartRed(void const * argument)
   {
     HAL_GPIO_WritePin(GPIOD, PIN_RED, GPIO_PIN_SET);
 		osSignalWait(1, osWaitForever);
-		NonBlocking_Freq(PIN_RED, 5000, FLASH_HIGH_FREQ);
+		NonBlocking_Freq(PIN_RED, 5000, HIG_FREQ);
   }
 }
 
@@ -26,7 +26,7 @@ void StartGreen(void const * argument)
   {
 	  HAL_GPIO_WritePin(GPIOD, PIN_GREEN, GPIO_PIN_SET);
     osSignalWait(0x0001, osWaitForever);
-    NonBlocking_Freq(PIN_GREEN, 5000, FLASH_HIGH_FREQ);
+    NonBlocking_Freq(PIN_GREEN, 5000, HIG_FREQ);
   }
 }
 
@@ -37,7 +37,7 @@ void StartBlue(void const * argument)
   /* Infinite loop */ 
   for(;;)
   {
-    NonBlocking_Freq(PIN_BLUE, 10000, FLASH_LOW_FREQ);
+    NonBlocking_Freq(PIN_BLUE, 10000, LOW_FREQ);
     HAL_GPIO_WritePin(GPIOD, PIN_BLUE, GPIO_PIN_RESET);
 
     osSignalSet(GreenTaskHandle, 1);

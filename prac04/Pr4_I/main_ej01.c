@@ -29,19 +29,19 @@ void StartRed(void const * argument)
   for(;;)
   {
     // Parpadeo del LED a HF
-    NonBlocking_Freq(PIN_RED, 10000, FLASH_HIGH_FREQ);
+    NonBlocking_Freq(PIN_RED, 10000, HIG_FREQ);
 
     // Set de la bandera a 1
     CFlag_Set(&Flag1);
 
     // Parpadeo del LED a LF
-    NonBlocking_Freq(PIN_RED, 15000, FLASH_LOW_FREQ);
+    NonBlocking_Freq(PIN_RED, 15000, LOW_FREQ);
 
     // Clear de la bandera a 1
     CFlag_Clear(&Flag1);
 
     // Parpadeo del LED a HF
-    NonBlocking_Freq(PIN_RED, 5000, FLASH_HIGH_FREQ);
+    NonBlocking_Freq(PIN_RED, 5000, HIG_FREQ);
 
     vTaskSuspend(NULL);
   }
@@ -53,19 +53,19 @@ void StartGreen(void const * argument)
   for(;;)
   {
     // Parpadeo del LED a HF
-    NonBlocking_Freq(PIN_GREEN, 10000, FLASH_HIGH_FREQ);
+    NonBlocking_Freq(PIN_GREEN, 10000, HIG_FREQ);
     
     // Set de la bandera a 2
     CFlag_Set(&Flag2);
 
     // Parpadeo del LED a LF
-    NonBlocking_Freq(PIN_GREEN, 10000, FLASH_LOW_FREQ);
+    NonBlocking_Freq(PIN_GREEN, 10000, LOW_FREQ);
 
     // Clear de la bandera a 2
     CFlag_Clear(&Flag2);
 
     // Parpadeo del LED a HF
-    NonBlocking_Freq(PIN_GREEN, 10000, FLASH_HIGH_FREQ);
+    NonBlocking_Freq(PIN_GREEN, 10000, HIG_FREQ);
 
     vTaskSuspend(NULL);
   }
@@ -87,14 +87,14 @@ void StartBlue(void const * argument)
 
 		if ((aux1 == Set) && (aux2 == Set)) {
 			HAL_GPIO_WritePin(GPIOD, PIN_BLUE , GPIO_PIN_SET);
-	    	//NonBlocking_Freq(PIN_BLUE, delay, FLASH_LOW_FREQ);
+	    	//NonBlocking_Freq(PIN_BLUE, delay, LOW_FREQ);
 		}
 		else if ((aux1 == Reset) && (aux2 == Reset)) {
 			HAL_GPIO_WritePin(GPIOD, PIN_BLUE , GPIO_PIN_RESET);
-			//NonBlocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ);
+			//NonBlocking_Freq(PIN_BLUE, delay, HIG_FREQ);
 		}
 		else {
-		    NonBlocking_Freq(PIN_BLUE, delay, FLASH_HIGH_FREQ);
+		    NonBlocking_Freq(PIN_BLUE, delay, HIG_FREQ);
 		  }
 	  }
 }

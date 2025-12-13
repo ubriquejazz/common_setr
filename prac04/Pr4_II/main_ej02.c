@@ -20,12 +20,12 @@ void StartGreen(void const * argument)
 {
   for(;;)
   {
-    NonBlocking_Freq(PIN_GREEN, 5000, FLASH_HIGH_FREQ);
+    NonBlocking_Freq(PIN_GREEN, 5000, HIG_FREQ);
 
     // SYNC1: request
     osSemaphoreWait(Sync1, portMAX_DELAY);
 
-    NonBlocking_Freq(PIN_GREEN, 10000, FLASH_LOW_FREQ);
+    NonBlocking_Freq(PIN_GREEN, 10000, LOW_FREQ);
 
     // SYNC2: ack
     osSemaphoreRelease(Sync2);
@@ -38,11 +38,11 @@ void StartRed(void const * argument)
   for(;;)
   {
   
-    NonBlocking_Freq(PIN_RED, 10000, FLASH_LOW_FREQ);
+    NonBlocking_Freq(PIN_RED, 10000, LOW_FREQ);
 
     // SYNC1: ack
     osSemaphoreRelease(Sync1);
-    NonBlocking_Freq(PIN_RED, 5000, FLASH_HIGH_FREQ);
+    NonBlocking_Freq(PIN_RED, 5000, HIG_FREQ);
 
     // SYNC2: request
     osSemaphoreWait(Sync2, portMAX_DELAY);

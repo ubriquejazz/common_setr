@@ -13,7 +13,7 @@ void main() {
 
 void seccion_critica(int pin) {
   HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_SET);
-  Blocking_Freq(PIN_BLUE, 2000, FLASH_LOW_FREQ);
+  Blocking_Freq(PIN_BLUE, 2000, LOW_FREQ);
   HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_RESET);
 }
 
@@ -47,7 +47,7 @@ void StartParpLEDVerde(void const * argument)
   for(;;)
   {
   helper(PIN_GREEN, USE_MUTEX);
-  Blocking_Freq(PIN_GREEN, 4000, FLASH_LOW_FREQ);
+  Blocking_Freq(PIN_GREEN, 4000, LOW_FREQ);
   vTaskSuspend(NULL);
   }
   /* USER CODE END 5 */ 
@@ -68,7 +68,7 @@ void StartParpLEDRojo(void const * argument)
   for(;;)
   {
   helper(PIN_RED, USE_MUTEX);
-  Blocking_Freq(PIN_RED, 4000, FLASH_LOW_FREQ);
+  Blocking_Freq(PIN_RED, 4000, LOW_FREQ);
   vTaskSuspend(NULL);
   }
   /* USER CODE END StartParpLEDRojo */
@@ -88,7 +88,7 @@ void StartParpLEDNaranja(void const * argument)
   osDelay(1000);
   for(;;)
   {
-  Blocking_Freq(PIN_ORANGE, 4000, FLASH_LOW_FREQ);
+  Blocking_Freq(PIN_ORANGE, 4000, LOW_FREQ);
   vTaskSuspend(NULL);
   }
   /* USER CODE END StartParpLEDNaranja */
