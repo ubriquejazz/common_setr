@@ -1,4 +1,7 @@
-# include "pool.h"
+#include "../delay.h"
+#include "../pool.h"
+#include <stdio.h>		// for sprintf
+#include <string.h>		// for strlen
 
 UART_HandleTypeDef huart2;
 
@@ -40,15 +43,16 @@ void main() {
 }
 
 void StartCtrl() {
+  int duracion_ms = 8000;
   for(;;)
   {
-	    Pool_Escribir(&FreqRed, HIG_FREQ);
-	    Pool_Escribir(&FreqGreen, LOW_FREQ);
-	    osDelay(8000);
+        Pool_Escribir(&FreqRed, HIG_FREQ);
+        Pool_Escribir(&FreqGreen, LOW_FREQ);
+        NonBlocking_Freq(PIN_ORANGE, duracion_ms, LOW_FREQ);
 
-	    Pool_Escribir(&FreqRed, LOW_FREQ);
-	    Pool_Escribir(&FreqGreen, HIG_FREQ);
-	    osDelay(8000);
+        Pool_Escribir(&FreqRed, LOW_FREQ);
+        Pool_Escribir(&FreqGreen, HIG_FREQ);
+        NonBlocking_Freq(PIN_ORANGE, duracion_ms, LOW_FREQ);
   }
 }
 
@@ -56,8 +60,8 @@ void StartGreen(void const * argument) {
     int delay_ms = 9500;
     for(;;)
     {
-
-		osDelay(9500);
+        Blocking_Freq(PIN_GREEN, duracion_ms, Pool_Leer(FreqGreen));
+		// osDelay(9500);
     }
 }
 
@@ -65,6 +69,7 @@ void StartRed(void const * argument) {
     int delay_ms = 5500;
     for(;;)
     {
-        osDelay(6000);
+        Blocking_Freq(PIN_RED, duracion_ms, Pool_Leer(FreqRed));
+        //osDelay(6000);
     }
 }
