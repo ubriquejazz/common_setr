@@ -1,4 +1,4 @@
-#include "delay.h"
+#include "../delay.h"
 
 osThreadId RedTaskHandle;
 osThreadId GreenTaskHandle;
@@ -25,7 +25,7 @@ void StartGreen(void const * argument)
   for(;;)
   {
 	  HAL_GPIO_WritePin(GPIOD, PIN_GREEN, GPIO_PIN_SET);
-    osSignalWait(0x0001, osWaitForever);
+    osSignalWait(1, osWaitForever);
     NonBlocking_Freq(PIN_GREEN, 5000, HIG_FREQ);
   }
 }

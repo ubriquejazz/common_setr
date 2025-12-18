@@ -9,31 +9,31 @@ osThreadId RedTaskHandle;
 osThreadId GreenTaskHandle;
 osThreadId OrangeTaskHandle;
 
-char huart2_msg[50];
+char uart_msg[50];
 
-void print_msg() {
-	HAL_UART_Transmit(&huart2, (uint8_t *)huart2_msg, strlen(huart2_msg), HAL_MAX_DELAY);
+void print_uart_msg() {
+	HAL_UART_Transmit(&huart2, (uint8_t *)uart_msg, strlen(uart_msg), HAL_MAX_DELAY);
 	HAL_UART_Transmit(&huart2, (uint8_t *)"\r\n", 2, HAL_MAX_DELAY);
 }
 
 void Pool_Test() {
 	if (Pool_Init(&FreqGreen, 0) == pdTRUE)
 	if (Pool_Escribir(&FreqGreen, HIG_FREQ) == pdTRUE)
-		sprintf(huart2_msg, "GREEN value: %d", Pool_Leer(FreqGreen));
+		sprintf(uart_msg, "GREEN value: %d", Pool_Leer(FreqGreen));
 	else
-		sprintf(huart2_msg, "GREEN: Cant write!");
+		sprintf(uart_msg, "GREEN: Cant write!");
 	else
-	  sprintf(huart2_msg, "GREEN:No initialized!");
-	print_msg();
+	  sprintf(uart_msg, "GREEN:No initialized!");
+	print_uart_msg();
 
 	if (Pool_Init(&FreqRed, 0) == pdTRUE)
 	if (Pool_Escribir(&FreqRed, LOW_FREQ) == pdTRUE)
-		sprintf(huart2_msg, "RED value: %d", Pool_Leer(FreqRed));
+		sprintf(uart_msg, "RED value: %d", Pool_Leer(FreqRed));
 	else
-		sprintf(huart2_msg, "RED: Cant write");
+		sprintf(uart_msg, "RED: Cant write");
 	else
-	  sprintf(huart2_msg, "RED:No initialized!");
-	print_msg();
+	  sprintf(uart_msg, "RED:No initialized!");
+	print_uart_msg();
 }
 
 void main() {
