@@ -17,42 +17,14 @@ BaseType_t CFlag_Init(CFlag_t* handle) {
 }
 
 // Sets the flag and gives the semaphore, unblocking a waiting task
-BaseType_t CFlag_Set(CFlag_t* handle) {
-    if (handle == NULL)
-    	return pdFALSE; // Validación básica
-
-	BaseType_t retVal = pdTRUE;
-    // (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING) {
-    if (xSemaphoreTake(miSemaforo, portMAX_DELAY) == pdTRUE) {
-        handle->state = Set;
-        handle->data = 1001;
-        xSemaphoreGive(miSemaforo);
-    } else {
-        // If the scheduler hasn't started
-        retVal = pdFALSE;
-    }
-    return retVal;
+void CFlag_Set(CFlag_t* handle, int value) {
+	handle->state = Set;
+	handle->data = value;
+	xSemaphoreGive(miSemaforo);
 }
 
-// Clears the flag and gives the semaphore, unblocking ...
-BaseType_t CFlag_Clear(CFlag_t* handle) {
-    if (handle == NULL)
-    	return pdFALSE; // Validación básica
-
- 	BaseType_t retVal = pdTRUE;
-    // (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING) {
-    if ( xSemaphoreTake(miSemaforo, portMAX_DELAY) == pdTRUE) {
-        handle->state = Reset;
-        handle->data = 0;
-        xSemaphoreGive(miSemaforo);
-    } else {
-        // If the scheduler hasn't started
-        retVal = pdFALSE;
-    }
-    return retVal;
-}
-   
 // Waits for the flag to be set (takes the semaphore).
-CFlagState_t CFlag_Wait(CFlag_t flag) {
-    return flag.state;
+void CFlag_Wait(CFlag_t flag) {
+	xSemaphoreTake(miSemaforo, portMAX_DELAY);
 }
+

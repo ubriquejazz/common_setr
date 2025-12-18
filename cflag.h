@@ -11,8 +11,8 @@ typedef struct {
 } CFlag_t;
 
 BaseType_t CFlag_Init(CFlag_t* handle);
-BaseType_t CFlag_Set(CFlag_t* handle);
-BaseType_t CFlag_Clear(CFlag_t* handle);
-CFlagState_t CFlag_Wait(CFlag_t* handle);
+
+void CFlag_Set(CFlag_t* handle, int value);
+void CFlag_Wait(CFlag_t);
 
 #endif // CFLAG_H
