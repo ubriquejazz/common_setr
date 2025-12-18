@@ -10,7 +10,7 @@ BaseType_t CFlag_Init(CFlag_t* handle) {
         // insufficient heap memory
         retVal = pdFALSE;
     else {
-        handle->state = Reset;
+        handle->state = Unlock;
         xSemaphoreGive(miSemaforo);
     }
     return retVal;
@@ -18,13 +18,14 @@ BaseType_t CFlag_Init(CFlag_t* handle) {
 
 // Sets the flag and gives the semaphore, unblocking a waiting task
 void CFlag_Set(CFlag_t* handle, int value) {
-	handle->state = Set;
+	handle->state = Unlock;
 	handle->data = value;
 	xSemaphoreGive(miSemaforo);
 }
 
 // Waits for the flag to be set (takes the semaphore).
 void CFlag_Wait(CFlag_t flag) {
+    handle->state = Locked;
 	xSemaphoreTake(miSemaforo, portMAX_DELAY);
 }
 

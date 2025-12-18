@@ -3,7 +3,7 @@
 
 #include "cmsis_os.h"
 
-typedef enum {Set, Reset, Error} CFlagState_t;
+typedef enum {Unlock, Locked, Error} CFlagState_t;
 
 typedef struct {
     int data;
