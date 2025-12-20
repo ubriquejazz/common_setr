@@ -9,6 +9,7 @@ UART_HandleTypeDef huart2;
 osThreadId RedTaskHandle;
 osThreadId GreenTaskHandle;
 osThreadId OrangeTaskHandle;
+osThreadId BlueTaskHandle;
 
 Mailbox_t HumidityMailbox;	// Red + Orange
 Mailbox_t TemperatureMailbox; // Green + Blue
@@ -28,8 +29,8 @@ void fatal_error() {
 void main_init(void)
 {
 	// ...
-	Mailbox_Init(&TemperatureMailbox);
-	Mailbox_Init(&HumidityMailbox);
+	Mailbox_Init(&TemperatureMailbox, 0);
+	Mailbox_Init(&HumidityMailbox, 0);
 
 	/* definition and creation of RedTask */
 	osThreadDef(RedTask, StartRed, osPriorityNormal, 0, 128);
@@ -63,7 +64,7 @@ void StartRed(void const * argument) {
         if (Mailbox_Post(my_mailbox, current_humidity) == pdFALSE)
       	  fatal_error();
         else
-      	  NonBlocking_Flash(PIN_RED, 8000);
+      	  NonBlocking_Flash(PIN_RED, 19000); // humidity each 19s
     }
 }
 
@@ -77,7 +78,7 @@ void StartGreen(void const * argument)
       if (Mailbox_Post(my_mailbox, temp_sensor) == pdFALSE)
     	  fatal_error();
       else
-    	  NonBlocking_Flash(PIN_GREEN, 15000);
+    	  NonBlocking_Flash(PIN_GREEN, 11000); // temperature each 11s
 	}
 }
 
@@ -99,11 +100,11 @@ void StartOrange(void const * argument)
 void StartBlue(void const * argument)
 {
 	Mailbox_t *shared_mbox = (Mailbox_t *)argument;
-	int value1, value2;
+	int received_data;
 	for(;;)
 	{
 		Mailbox_Pend(shared_mbox);
-		value1 = shared_mbox->data;
+		received_data = shared_mbox->data;
 		sprintf(uart_msg,"Temperatura: %d.%d", 
 		received_data / 10, received_data % 10);
 		print_uart_msg();
