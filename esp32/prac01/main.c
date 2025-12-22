@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "../blink.h"
 
 // define global variables for led status
 int greenLED = 0;  // 0-off, 1-on
