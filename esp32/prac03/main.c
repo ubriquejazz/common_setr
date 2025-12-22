@@ -1,20 +1,19 @@
-#include "../command.h"
+#include "../blinking.h"
 
-TaskHandle_t taskCmdParse, taskCmdExec;
-TaskHandle_t taskCmd = NULL; // task handle used to pause, restart, or stop running tasks
-
+//define semaphore object handle
+SemaphoreHandle_t syncFlag;
 
 void main() 
 { 
-    Serial.begin(115200);
+  Serial.begin(115200);
 
-    //...
+  // create the binary semaphore
+  syncFlag = xSemaphoreCreateBinary();
+  if (syncFlag != NULL){
+    println("flag OK");
+  }
+    xTaskCreate (TaskBlinkSeq, "blabla", 4096, (void *)&blinkGreen, 2, &taskGreen);
+    xTaskCreate (TaskSpeed, "Speed", NULL, 2, &taskSpeed); 
 
-  // Run this in core separate from LED tasks if there are two cores. Still priority 2
-  xTaskCreate( TaskCmdParse, "Command Parser", 4096, NULL, 2, &taskCmdParse); 
-    
-  xTaskCreate( TaskCmdExec, "Execute Commands From Queue", 4096, NULL, 2, &taskCmdExec); 
-
-    //...
 }
 

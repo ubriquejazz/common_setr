@@ -11,5 +11,6 @@ struct BlinkData {
 
 // define task functions
 void TaskBlink(void *pvParameters);
+void TaskBlinkSeq(void *pvParameters);
 
 #endif

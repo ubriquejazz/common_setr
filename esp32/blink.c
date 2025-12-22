@@ -13,3 +13,6 @@ void TaskBlink(void *pvParameters) {
     vTaskDelay(delayInt); // unblock delay for off cycle                
   }
 }
+
+void TaskBlinkSeq(void *pvParameters) {
+}
