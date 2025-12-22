@@ -9,6 +9,8 @@ void TaskHighWater(void *pvParameters)
 {
   while (true) {
     // wait 5 seconds so system is fully running
+    xSemaphoreTake(printMutex,portMAX_DELAY); 
+    
     // display highwater marks for all 6 tasks
     Serial.println("***************************");
     Serial.print("High Water Mark for Green LED : ");
@@ -24,6 +26,7 @@ void TaskHighWater(void *pvParameters)
     Serial.print("High Water Mark for Speed: ");
     Serial.println(uxTaskGetStackHighWaterMark(taskSpeed));
     Serial.flush(); // make sure last data is written
+    xSemaphoreGive(printMutex); //release the printer mutex
     vTaskSuspend(NULL); // run this task only once
   }
 }
@@ -43,6 +46,12 @@ void main()
 
     highwaterTimer = xTimerCreate("", 10000, pdTRUE, 0, hwCallback);
     hwTimerStarted = xTimerStart(highwaterTimer, 0 );
+
+    SemaphoreHandle_t printMutex;
+    printMutex = xSemaphoreCreateMutex();
+    if (printMutex != NULL)
+        Serial.println("printMutex created");
+
 
     // ...
 }
