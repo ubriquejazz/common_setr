@@ -7,6 +7,12 @@ In lesson 3 we will learn several techniques for synchronizing the tasks so that
 
 To this end, we will look at four very common methods that are used to  control the processing sequence in real-time operating systems.
 
-## semaphores, mutexes and queues
+First, we will use a binary semaphore to synchronize the blinking of our three LED lights so that they blink in sequential order.
 
-In this exercise we  will use a binary semaphore to synchronize the blinking of our three LED lights so that they blink in sequential order.
+How does the system know what order to sequence the lights? 
+
+- We have given  the three LED tasks a higher priority (3) than the other tasks, so the scheduler prioritizes them first.
+
+- The cycles of a blink (led on and off) doesn't consume CPU.
+
+Finally, we modify the code for the TaskTally function. It doesn’t make sense to record the number of LEDs lit since it will always be 1 when they light sequentially. Instead we will have the OLED display the color of the  LED currently lit.
