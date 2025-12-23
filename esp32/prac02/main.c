@@ -9,8 +9,8 @@ void main()
 
     //...
 
-    xTaskCreate (TaskOLED, "Speed", NULL, 2, &taskTally); 
-    xTaskCreate (TaskHighWater, "Speed", NULL, 2, &taskHighwater); 
+    xTaskCreate (TaskOLED, "", NULL, 2, &taskTally); 
+    xTaskCreate (TaskHighWater, "", NULL, 2, &taskHighwater); 
     //...
 }
 

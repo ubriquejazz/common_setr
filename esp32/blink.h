@@ -1,5 +1,5 @@
-#ifndef BLINKING_H
-#define BLINKING_H
+#ifndef BLINK_H
+#define BLINK_H
 
 // define structure for data to pass to each task
 struct BlinkData {

@@ -13,6 +13,6 @@ How does the system know what order to sequence the lights?
 
 - We have given  the three LED tasks a higher priority (3) than the other tasks, so the scheduler prioritizes them first.
 
-- The cycles of a blink (led on and off) doesn't consume CPU.
+- The cycles of a blink (led on and off) doesn't consume CPU, up to the moement the semaphore is released.
 
 Finally, we modify the code for the TaskTally function. It doesn’t make sense to record the number of LEDs lit since it will always be 1 when they light sequentially. Instead we will have the OLED display the color of the  LED currently lit.

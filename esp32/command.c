@@ -102,7 +102,7 @@ void CMD_Init() {
     if (printMutex != NULL) Serial.println("printMutex created");
 
     // initialize queue for commands
-    queCmd = xQueueCreate( 5, sizeof( CMD_Data ) );
+    queCmd = xQueueCreate( 5, sizeof(CMD_Data) );
     if( queCmd != NULL ) Serial.println("command queue created");
 
     strcpy(valueToSend.Cmd, "");
