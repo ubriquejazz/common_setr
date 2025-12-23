@@ -3,17 +3,13 @@
 
 const byte numChars = 24;
  
-struct CmdData {
+struct CMD_Data {
   char  Cmd[numChars];
   char  Obj[numChars];
 };
 
-const char* cmdList = "kill...pause...resume...speed"; // list of accepted values for command
-const char* objListLED = "red...green...blue";   // list of accepted values 
-const char* objListSpeed = "faster...slower";
-
-void recvWithEndMarker();
-void parseData(); // split the data into its parts
-void checkParsedData();
+void CMD_Init();
+void CMD_Exec(void *pvParameter);
+void CMD_Parse(void *pvParameter);
 
 #endif
