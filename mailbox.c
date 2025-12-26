@@ -1,4 +1,4 @@
-// mailbox.c used in prac05/main.c
+// mailbox.c used in prac05/Pr5_II/main.c
 
 #include "mailbox.h"
 
