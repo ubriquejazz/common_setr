@@ -10,6 +10,8 @@ osThreadId GreenTaskHandle;
 osThreadId OrangeTaskHandle;
 osThreadId BlueTaskHandle;
 
+osThreadId producerID, consumerID;
+
 char uart_msg[50];
 
 void print_uart_msg() {
@@ -22,11 +24,20 @@ void fatal_error() {
 	vTaskSuspend(NULL);
 }
 
-void main_init(void)
+const int numChars = 24;
+struct CmdData {
+  char Cmd[numChars];
+  char Obj[numChars];
+};
+struct CmdData mailbox;
+
+osMutexId valueMutex;
+osMutexDef(valueMutex);
+
+void main(void)
 {
 	// ...
 	
-
 	/* definition and creation of RedTask */
 	osThreadDef(RedTask, StartRed, osPriorityNormal, 0, 128);
 	RedTaskHandle = osThreadCreate(osThread(RedTask), NULL);
@@ -43,10 +54,24 @@ void main_init(void)
 	osThreadDef(BlueTask, StartBlue, osPriorityNormal, 0, 128);
 	BlueTaskHandle = osThreadCreate(osThread(BlueTask), NULL);
 
+	valueMutex = osMutexCreate(osMutex(valueMutex));
+
+	// Crear Tareas (Threads)
+	osThreadDef(Producer, vProducerTask, osPriorityNormal, 0, 128);
+	producerID = osThreadCreate(osThread(Producer), NULL);
+
+	osThreadDef(Consumer, vConsumerTask, osPriorityNormal, 0, 128);
+	consumerID = osThreadCreate(osThread(Consumer), NULL);
+
+	// --- DISPARADOR INICIAL ---
+	// Le decimos al productor que el buffer está "vacío" por primera vez
+	osSignalSend(producerID, SIGNAL_READY);
+	
+	// ...
+
 }
 
 void StartRed(void const * argument) {
-	Mailbox_t *my_mailbox = (Mailbox_t *)argument;
 	int current_humidity = 500; // Humedad inicial (50.0%)
 	for(;;)
     {
@@ -54,9 +79,7 @@ void StartRed(void const * argument) {
     }
 }
 
-void StartGreen(void const * argument)
-{
-	Mailbox_t *my_mailbox = (Mailbox_t *)argument;
+void StartGreen(void const * argument) {
 	int temp_sensor = 250; // Dato a enviar
 	for(;;)
 	{
@@ -64,9 +87,7 @@ void StartGreen(void const * argument)
 	}
 }
 
-void StartOrange(void const * argument)
-{
-	Mailbox_t *shared_mbox = (Mailbox_t *)argument;
+void StartOrange(void const * argument) {
 	int received_data;
 	for(;;)
 	{
@@ -79,9 +100,7 @@ void StartOrange(void const * argument)
 	}
 }
 
-void StartBlue(void const * argument)
-{
-	Mailbox_t *shared_mbox = (Mailbox_t *)argument;
+void StartBlue(void const * argument) {
 	int received_data;
 	for(;;)
 	{
@@ -91,4 +110,45 @@ void StartBlue(void const * argument)
 		received_data / 10, received_data % 10);
 		print_uart_msg();
 	}
+}
+
+void vProducerTask(void const *argument) {
+  for (;;) {
+    // Esperar señal de que el buffer está vacío (enviada por el consumidor)
+    osSignalWait(0x01, osWaitForever);
+
+    if (1) {
+      // Proteger el acceso al mailbox
+      osMutexWait(valueMutex, osWaitForever);
+      strcpy(mailbox.Cmd, "START");
+      strcpy(mailbox.Obj, "ENGINE_01");
+      osMutexRelease(valueMutex);
+
+      // Notificar al consumidor que hay datos listos
+      osSignalSend(consumerID, 0x01);
+    }
+  }
+}
+
+void vConsumerTask(void const *argument) {
+  struct CmdData localCopy;
+
+  for (;;) {
+    // Esperar señal de que hay datos disponibles (enviada por el productor)
+    osSignalWait(0x01, osWaitForever);
+
+    if (1) {
+      // Proteger el acceso para copiar los datos
+      osMutexWait(valueMutex, osWaitForever);
+
+	  memcpy(&localCopy, &mailbox, sizeof(struct CmdData));
+      osMutexRelease(valueMutex);
+
+      // Procesar comando "localCopy"
+	
+	  // Notificar al productor que el buffer quedó vacío
+      osSignalSend(producerID, 0x01);
+
+    }
+  }
 }

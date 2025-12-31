@@ -6,13 +6,14 @@
 
 UART_HandleTypeDef huart2;
 
-osThreadId RedTaskHandle;
-osThreadId GreenTaskHandle;
-osThreadId OrangeTaskHandle;
-osThreadId BlueTaskHandle;
+Mailbox_t TemperatureMailbox; // Green + Blue
+osThreadId GreenTaskHandle;		// TA1
+osThreadId BlueTaskHandle;		// TB1
 
 Mailbox_t HumidityMailbox;	// Red + Orange
-Mailbox_t TemperatureMailbox; // Green + Blue
+osThreadId RedTaskHandle;		// TA2
+osThreadId OrangeTaskHandle;	// TB2
+
 
 char uart_msg[50];
 
@@ -26,7 +27,7 @@ void fatal_error() {
 	vTaskSuspend(NULL);
 }
 
-void main_init(void)
+void main(void)
 {
 	// ...
 	Mailbox_Init(&TemperatureMailbox, 0);
@@ -50,7 +51,8 @@ void main_init(void)
 
 }
 
-void StartRed(void const * argument) {
+void StartRed(void const * argument) 
+{
 	Mailbox_t *my_mailbox = (Mailbox_t *)argument;
 	int current_humidity = 500; // Humedad inicial (50.0%)
 	for(;;)
