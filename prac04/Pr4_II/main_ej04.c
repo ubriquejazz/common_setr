@@ -12,6 +12,11 @@ osThreadId BlueTaskHandle;		// TB1
 
 char uart_msg[50];
 
+int _write(int file, char *ptr, int len) {
+	HAL_UART_Transmit(&huart2,(uint8_t *)ptr,len,10);
+	return len;
+}
+
 void print_uart_msg() {
 	HAL_UART_Transmit(&huart2, (uint8_t *)uart_msg, strlen(uart_msg), HAL_MAX_DELAY);
 	HAL_UART_Transmit(&huart2, (uint8_t *)"\r\n", 2, HAL_MAX_DELAY);
@@ -62,5 +67,6 @@ void StartBlue(void const * argument)
 		sprintf(uart_msg,"Temperatura: %d.%d", 
 		received_data / 10, received_data % 10);
 		print_uart_msg();
+		//print("Temperatura: %d.%d", received_data / 10, received_data % 10);
 	}
 }

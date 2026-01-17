@@ -5,7 +5,6 @@
 osMutexId myMutexHandle;
 osSemaphoreId mySemHandle;
 
-
 void main(void)
 {
 	// ...
@@ -22,14 +21,19 @@ void main(void)
 	osThreadDef(OrangeTask, StartOrange, osPriorityAboveNormal, 0, 128);
 	OrangeTaskHandle = osThreadCreate(osThread(OrangeTask), NULL);
 	
-	// Create semaphore or mutex
+	// Create semaphore or mutex and release it to start
+  if (mutex) {
+    osMutexDef(myMutex);
+    myMutexHandle = osMutexCreate(osMutex(myMutex));
+    osMutexRelease(myMutexHandle);
+  }
+  else {
+    osSemaphoreDef(mySem);
+    mySemHandle = osSemaphoreCreate(osSemaphore(mySem), 1);
+    osSemaphoreRelease(mySemHandle);
+  }
 
-  // Release to start
-  if (mutex)
-    osMutexRelease(mySemHandle);
-  else
-    sSemaphoreRelease(mySemHandle);
-
+  // ...
 }
 
 void seccion_critica(int pin) {
