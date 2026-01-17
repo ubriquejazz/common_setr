@@ -13,6 +13,11 @@ void print_msg() {
 	HAL_UART_Transmit(&huart2, (uint8_t *)"\r\n", 2, HAL_MAX_DELAY);
 }
 
+int _write(int file, char *ptr, int len) {
+	HAL_UART_Transmit(&huart2,(uint8_t *)ptr,len,10);
+	return len;
+}
+
 void fatal_error(const char* string) {
 	sprintf(uart_msg, "[Error] %s", string);
 	print_msg();
