@@ -7,10 +7,10 @@ void helper_ej01(int pin) {
   //taskENTER_CRITICAL();
   if (Flag==1){
     Flag = 0;
-    for(long i=0;i<12;i++){
+    for(long i=0;i<8;i++){
       HAL_GPIO_TogglePin(GPIOD, pin);
-      for(long j=0;j<52765;j++)
-      __NOP();
+      for(long j=0;j<65535;j++)
+        __NOP();
     }
     HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_RESET);
     Flag = 1;
@@ -51,7 +51,6 @@ for(;;)
 /* USER CODE END Header_StartParpLEDRojo */
 void StartParpLEDRojo(void const * argument)
 {
-
 TickType_t RegTiempo;
 TickType_t Retardo = 700;
 RegTiempo = xTaskGetTickCount();

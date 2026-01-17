@@ -11,7 +11,6 @@ void helper(int pin) {
     HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_SET);
   }
   delay_1s(); // blocking delay
-  // delay_ms(50); // shorter blocking delay
   
   HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_RESET);
   Flag = 1;
@@ -25,19 +24,15 @@ void helper_ia(int pin) {
     // 1. Safely read and modify the shared resource (Flag)
     taskENTER_CRITICAL();
     if (Flag == 1) {
-        // State 1: Just toggle Flag to 0, no output action needed yet
-        Flag = 0;
-        // action_needed remains 0
+      Flag = 0;
     } 
     else {
-        // State 0: Toggle output and set Flag back to 1 later
-        action_needed = 1; 
+      action_needed = 1; 
     }
     taskEXIT_CRITICAL();
 
     // 2. Perform long-duration hardware/delay actions *outside* the critical section
     if (action_needed == 1) {
-        // Execute the SET, delay, RESET sequence
         HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_SET);
         
         // IMPORTANT: Use an RTOS-friendly delay function here, e.g., vTaskDelay()
@@ -53,22 +48,54 @@ void helper_ia(int pin) {
     }
 }
 
-void Start() {
+void main(void)
+{
+	// ...
+	
+	/* definition and creation of RedTask */
+	osThreadDef(RedTask, StartRed, osPriorityNormal, 0, 128);
+	RedTaskHandle = osThreadCreate(osThread(RedTask), 200);
 
+	/* definition and creation of GreenTask */
+	osThreadDef(GreenTask, StartGreen, osPriorityNormal, 0, 128);
+	GreenTaskHandle = osThreadCreate(osThread(GreenTask), 550);
+
+	/* definition and creation of OrangeTask */
+	osThreadDef(OrangeTask, StartOrange, osPriorityAboveNormal, 0, 128);
+	OrangeTaskHandle = osThreadCreate(osThread(OrangeTask), NULL);
+	
+	// ...
+
+}
+
+void StartRed(void const * argument) {
+  int miDelay = 200;
+  for(;;)
+  {
+    HAL_GPIO_WritePin(GPIOD, PIN_RED, GPIO_PIN_SET);
+    helper(PIN_BLUE);
+    osDelay(miDelay);
+    HAL_GPIO_WritePin(GPIOD, PIN_RED, GPIO_PIN_RESET);
+    osDelay(miDelay);
+  }
+  /* USER CODE END 5 */ 
+}
+
+void StartGreen(void const * argument) {
   int miDelay = 550;
   for(;;)
   {
-    HAL_GPIO_WritePin(GPIOD, PIN_XXX, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOD, PIN_GREEN, GPIO_PIN_SET);
     helper(PIN_BLUE);
     osDelay(miDelay);
-    HAL_GPIO_WritePin(GPIOD, PIN_XXX, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOD, PIN_GREEN, GPIO_PIN_RESET);
     osDelay(miDelay);
   }
   /* USER CODE END 5 */ 
 }
 
 /* USER CODE BEGIN Header_StartParpLEDNaranja */
-void StartParpLEDNaranja(void const * argument)
+void StartOrange(void const * argument)
 {
   /* USER CODE BEGIN StartParpLEDNaranja */
   /* Infinite loop */

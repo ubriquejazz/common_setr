@@ -35,6 +35,33 @@ void helper(int pin, int mutex) {
   osSemaphoreRelease(mySemHandle);
 }
 
+void main(void)
+{
+	// ...
+	
+	/* definition and creation of RedTask */
+	osThreadDef(RedTask, StartRed, osPriorityNormal, 0, 128);
+	RedTaskHandle = osThreadCreate(osThread(RedTask), 200);
+
+	/* definition and creation of GreenTask */
+	osThreadDef(GreenTask, StartGreen, osPriorityNormal, 0, 128);
+	GreenTaskHandle = osThreadCreate(osThread(GreenTask), 550);
+
+	/* definition and creation of OrangeTask */
+	osThreadDef(OrangeTask, StartOrange, osPriorityAboveNormal, 0, 128);
+	OrangeTaskHandle = osThreadCreate(osThread(OrangeTask), NULL);
+	
+	// Create semaphore or mutex
+
+  // Release to start
+  if (mutex)
+    osMutexRelease(mySemHandle);
+  else
+  osSemaphoreRelease(mySemHandle);
+
+}
+
+
 /* USER CODE BEGIN Header_StartParpLEDVerde */
 /**
   * @brief  Function implementing the ParpLEDVerde thread.
@@ -42,7 +69,7 @@ void helper(int pin, int mutex) {
   * @retval None
   */
 /* USER CODE END Header_StartParpLEDVerde */
-void StartParpLEDVerde(void const * argument)
+void StartGreen(void const * argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
@@ -65,7 +92,7 @@ void StartParpLEDVerde(void const * argument)
 * @retval None
 */
 /* USER CODE END Header_StartParpLEDRojo */
-void StartParpLEDRojo(void const * argument)
+void StartRed(void const * argument)
 {
 /* USER CODE BEGIN StartParpLEDRojo */
 /* Infinite loop */
@@ -88,7 +115,7 @@ for(;;)
 * @retval None
 */
 /* USER CODE END Header_StartParpLEDNaranja */
-void StartParpLEDNaranja(void const * argument)
+void StartOrange(void const * argument)
 {
 /* USER CODE BEGIN StartParpLEDNaranja */
 /* Infinite loop */
