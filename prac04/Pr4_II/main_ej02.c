@@ -37,7 +37,6 @@ void StartRed(void const * argument)
 {
   for(;;)
   {
-  
     NonBlocking_Freq(PIN_RED, 10000, LOW_FREQ);
 
     // SYNC1: ack

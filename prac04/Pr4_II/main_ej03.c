@@ -4,6 +4,7 @@
 #include <string.h>		// for strlen
 
 UART_HandleTypeDef huart2;
+Pool_t FreqGreen, FreqRed;
 
 osThreadId RedTaskHandle;
 osThreadId GreenTaskHandle;
