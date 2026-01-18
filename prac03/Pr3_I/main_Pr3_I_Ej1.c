@@ -7,12 +7,7 @@ void helper_ej01(int pin) {
   //taskENTER_CRITICAL();
   if (Flag==1){
     Flag = 0;
-    for(long i=0;i<8;i++){
-      HAL_GPIO_TogglePin(GPIOD, pin);
-      for(long j=0;j<65535;j++)
-        __NOP();
-    }
-    HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_RESET);
+    delay_16Hz(pin, 8);
     Flag = 1;
   } 
   else {
@@ -21,13 +16,6 @@ void helper_ej01(int pin) {
   //taskEXIT_CRITICAL();
 }
 
-/* USER CODE BEGIN Header_StartParpLEDVerde */
-/**
-  * @brief  Function implementing the ParpLEDVerde thread.
-  * @param  argument: Not used 
-  * @retval None
-  */
-/* USER CODE END Header_StartParpLEDVerde */
 void StartParpLEDVerde(void const * argument)
 {
 TickType_t RegTiempo;
@@ -42,13 +30,6 @@ for(;;)
 /* USER CODE END 5 */ 
 }
 
-/* USER CODE BEGIN Header_StartParpLEDRojo */
-/**
-* @brief Function implementing the ParpLEDRojo thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartParpLEDRojo */
 void StartParpLEDRojo(void const * argument)
 {
 TickType_t RegTiempo;

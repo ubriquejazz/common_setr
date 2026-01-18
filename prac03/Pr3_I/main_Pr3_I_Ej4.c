@@ -32,7 +32,7 @@ void helper(int pin, int mutex) {
   if (mutex)
     osMutexRelease(mySemHandle);
   else
-  osSemaphoreRelease(mySemHandle);
+    osSemaphoreRelease(mySemHandle);
 }
 
 void main(void)
@@ -52,23 +52,19 @@ void main(void)
 	OrangeTaskHandle = osThreadCreate(osThread(OrangeTask), NULL);
 	
 	// Create semaphore or mutex
-
-  // Release to start
-  if (mutex)
-    osMutexRelease(mySemHandle);
-  else
-  osSemaphoreRelease(mySemHandle);
+  if (mutex) {
+    osMutexDef(myMutex);
+    myMutexHandle = osMutexCreate(osMutex(myMutex));
+    osMutexRelease(myMutexHandle);
+  }
+  else {
+    osSemaphoreDef(mySem);
+    mySemHandle = osSemaphoreCreate(osSemaphore(mySem), 1);
+    osSemaphoreRelease(mySemHandle);
+  }
 
 }
 
-
-/* USER CODE BEGIN Header_StartParpLEDVerde */
-/**
-  * @brief  Function implementing the ParpLEDVerde thread.
-  * @param  argument: Not used 
-  * @retval None
-  */
-/* USER CODE END Header_StartParpLEDVerde */
 void StartGreen(void const * argument)
 {
   /* USER CODE BEGIN 5 */
@@ -85,13 +81,6 @@ void StartGreen(void const * argument)
   /* USER CODE END 5 */ 
 }
 
-/* USER CODE BEGIN Header_StartParpLEDRojo */
-/**
-* @brief Function implementing the ParpLEDRojo thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartParpLEDRojo */
 void StartRed(void const * argument)
 {
 /* USER CODE BEGIN StartParpLEDRojo */
@@ -108,13 +97,6 @@ for(;;)
 /* USER CODE END StartParpLEDRojo */
 }
 
-/* USER CODE BEGIN Header_StartParpLEDNaranja */
-/**
-* @brief Function implementing the ParpLEDNaranja thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartParpLEDNaranja */
 void StartOrange(void const * argument)
 {
 /* USER CODE BEGIN StartParpLEDNaranja */

@@ -11,7 +11,6 @@ void helper(int pin) {
     HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_SET);
   }
   delay_1s(); // blocking delay
-  
   HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_RESET);
   Flag = 1;
   taskEXIT_CRITICAL();
