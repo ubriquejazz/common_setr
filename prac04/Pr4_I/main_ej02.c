@@ -30,7 +30,6 @@ void StartGreen(void const * argument)
   }
 }
 
-
 void StartBlue(void const * argument)
 {
   /* USER CODE BEGIN StartRed */

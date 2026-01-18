@@ -10,19 +10,13 @@ Mailbox_t TemperatureMailbox; // Green + Blue
 osThreadId GreenTaskHandle;		// TA1
 osThreadId BlueTaskHandle;		// TB1
 
-char uart_msg[50];
-
 int _write(int file, char *ptr, int len) {
 	HAL_UART_Transmit(&huart2,(uint8_t *)ptr,len,10);
 	return len;
 }
 
-void print_uart_msg() {
-	HAL_UART_Transmit(&huart2, (uint8_t *)uart_msg, strlen(uart_msg), HAL_MAX_DELAY);
-	HAL_UART_Transmit(&huart2, (uint8_t *)"\r\n", 2, HAL_MAX_DELAY);
-}
-
-void fatal_error() {
+void fatal_error(const char* string) {
+	printf("[Error] %s", string);
 	HAL_GPIO_WritePin(GPIOD, PIN_BLUE, GPIO_PIN_SET);
 	vTaskSuspend(NULL);
 }
@@ -50,7 +44,7 @@ void StartGreen(void const * argument)
 	{
       temp_sensor += 1;
       if (Mailbox_Post(my_mailbox, temp_sensor) == pdFALSE)
-    	  fatal_error();
+    	  fatal_error("Posting temperature");
       else
     	  NonBlocking_20Hz(PIN_GREEN, 11000); // temperature each 11s
 	}
@@ -64,9 +58,6 @@ void StartBlue(void const * argument)
 	{
 		Mailbox_Pend(shared_mbox);
 		received_data = shared_mbox->data;
-		sprintf(uart_msg,"Temperatura: %d.%d", 
-		received_data / 10, received_data % 10);
-		print_uart_msg();
-		//print("Temperatura: %d.%d", received_data / 10, received_data % 10);
+		print("Temperatura: %d.%d", received_data / 10, received_data % 10);
 	}
 }

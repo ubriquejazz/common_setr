@@ -6,12 +6,7 @@ osThreadId GreenTaskHandle;
 osThreadId BlueTaskHandle;
 
 CFlag_t Flag1, Flag2;
-char uart_msg[50];
-
-void print_msg() {
-	HAL_UART_Transmit(&huart2, (uint8_t *)uart_msg, strlen(uart_msg), HAL_MAX_DELAY);
-	HAL_UART_Transmit(&huart2, (uint8_t *)"\r\n", 2, HAL_MAX_DELAY);
-}
+UART_HandleTypeDef huart2;
 
 int _write(int file, char *ptr, int len) {
 	HAL_UART_Transmit(&huart2,(uint8_t *)ptr,len,10);
@@ -19,8 +14,7 @@ int _write(int file, char *ptr, int len) {
 }
 
 void fatal_error(const char* string) {
-	sprintf(uart_msg, "[Error] %s", string);
-	print_msg();
+	printf("[Error] %s", string);
 	HAL_GPIO_WritePin(GPIOD, PIN_BLUE, GPIO_PIN_SET);
 	vTaskSuspend(NULL);
 }
@@ -28,6 +22,7 @@ void fatal_error(const char* string) {
 void main() {
 
   MX_GPIO_Init();
+  MX_UART_Init(&uart2);
 
   if (CFlag_Init(&Flag1) != pdTRUE)
 	  fatal_error("Flag1");
@@ -57,7 +52,6 @@ void StartGreen(void const * argument)
     NonBlocking_Freq(PIN_GREEN, 5000, HIG_FREQ);
     vTaskSuspend(NULL);
   }
-  
 }
 
 void StartBlue(void const * argument)
