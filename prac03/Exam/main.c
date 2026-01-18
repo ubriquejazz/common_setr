@@ -19,11 +19,10 @@ void LEDGreenTask(void const * argument)
     /* Accessing to the shared resource */
     osSemaphoreWait(mySemHandle, 16000);
     HAL_GPIO_WritePin(GPIOD, PIN_GREEN, GPIO_PIN_SET); 
-
     delay_16Hz(PIN_BLUE, 32); 
-
     HAL_GPIO_WritePin(GPIOD, PIN_GREEN, GPIO_PIN_RESET);
-    osSemaphoreRelease(XXX);
+    osSemaphoreRelease(mySemHandle);
+
     /* Leaving the shared resource */
     delay_16Hz(PIN_GREEN, 64);
     vTaskSuspend(NULL);
@@ -40,9 +39,9 @@ void LEDRedTask(void const * argument)
     osSemaphoreWait(mySemHandle, 16000);
     HAL_GPIO_WritePin(GPIOD, PIN_RED, GPIO_PIN_SET); 
     delay_16Hz(PIN_BLUE, 32); 
-
     HAL_GPIO_WritePin(GPIOD, PIN_RED, GPIO_PIN_RESET);
-    osSemaphoreRelease(XXX);
+    osSemaphoreRelease(mySemHandle);
+    
     /* Leaving the shared resource */
     delay_16Hz(PIN_RED, 64);
     vTaskSuspend(NULL);
