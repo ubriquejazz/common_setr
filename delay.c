@@ -9,11 +9,11 @@ void delay_ms(uint32_t ms) {
   }
 }
 
-void delay_10Hz(uint16_t pin, int iterations) {
+inline void delay_16Hz(uint16_t pin, int iterations) {
 	for(long i=0;i<iterations;i++)
 	{
 		if (pin) HAL_GPIO_TogglePin(GPIOD, pin);
-		for(long j=0;j<52765;j++)
+		for(long j=0;j<MAX_ITERATE;j++)
 		{
 			__NOP();
 		}
@@ -61,8 +61,14 @@ void NonBlocking_Freq(uint16_t pin, int duracion_ms, int period) {
 
 /*****************/
 
-
-void delay_1s() {
-	delay_10Hz(0, 12); // 52765 * 12 = 633180
+void delay_125ms() {
+	delay_16Hz(0, 2);
 }
 
+void delay_1s() {
+	delay_16Hz(0, 16);
+}
+
+void delay_2s() {
+	delay_16Hz(0, 32);
+}

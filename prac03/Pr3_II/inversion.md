@@ -1,4 +1,4 @@
-# Inversion de Prioridades
+# 3B: Inversion de Prioridades
 
 - ParpGreen = 2s (zona compartida) + 4s 
 - ParpRed = 2s (zona compartida) + 4s 
