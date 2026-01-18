@@ -52,7 +52,7 @@ void StartGreen(void const * argument)
       if (Mailbox_Post(my_mailbox, temp_sensor) == pdFALSE)
     	  fatal_error();
       else
-    	  NonBlocking_Flash(PIN_GREEN, 11000); // temperature each 11s
+    	  NonBlocking_20Hz(PIN_GREEN, 11000); // temperature each 11s
 	}
 }
 

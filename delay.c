@@ -9,23 +9,11 @@ void delay_ms(uint32_t ms) {
   }
 }
 
-inline void delay_16Hz(uint16_t pin, int iterations) {
-	for(long i=0;i<iterations;i++)
-	{
-		if (pin) HAL_GPIO_TogglePin(GPIOD, pin);
-		for(long j=0;j<MAX_ITERATE;j++)
-		{
-			__NOP();
-		}
-	}
-	if (pin) HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_RESET);
-}
-
-void Blocking_Flash(uint16_t pin, int duracion_ms) {
+void Blocking_20Hz(uint16_t pin, int duracion_ms) {
   int iterations = duracion_ms / 50;
   for (int j=0; j<iterations; j++) {
 		HAL_GPIO_TogglePin(GPIOD, pin);
-		delay_ms(25);			// 20 Hz = 50 ms
+		delay_ms(25);			// 20Hz = 50 ms
   }
   HAL_GPIO_WritePin(GPIOD, pin , GPIO_PIN_RESET);
 }
@@ -41,7 +29,7 @@ void Blocking_Freq(uint16_t pin, int duracion_ms, int period) {
 
 /*****************/
 
-void NonBlocking_Flash(uint16_t pin, int duracion_ms) {
+void NonBlocking_20Hz(uint16_t pin, int duracion_ms) {
   int iterations = duracion_ms / 50;
   for (int j=0; j<iterations; j++) {
 		HAL_GPIO_TogglePin(GPIOD, pin);
@@ -60,6 +48,18 @@ void NonBlocking_Freq(uint16_t pin, int duracion_ms, int period) {
 }
 
 /*****************/
+
+inline void delay_16Hz(uint16_t pin, int iterations) {
+	for(long i=0;i<iterations;i++)
+	{
+		if (pin) HAL_GPIO_TogglePin(GPIOD, pin);
+		for(long j=0;j<MAX_ITERATE;j++)
+		{
+			__NOP();
+		}
+	}
+	if (pin) HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_RESET);
+}
 
 void delay_125ms() {
 	delay_16Hz(0, 2);

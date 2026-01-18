@@ -14,7 +14,7 @@ void StartRed(void const * argument)
   for(;;)
   {
 	  HAL_GPIO_WritePin(GPIOD, PIN_RED, GPIO_PIN_SET);
-	  Blocking_Flash(PIN_ORANGE, 1000); // orange led
+	  Blocking_20Hz(PIN_ORANGE, 1000); // orange led
 	  vTaskDelayUntil(&lastWakeTime, 1500);
 	  HAL_GPIO_WritePin(GPIOD, PIN_RED, GPIO_PIN_RESET);
 	  vTaskDelayUntil(&lastWakeTime, 2000);
@@ -37,7 +37,7 @@ void StartGreen(void const * argument)
   for(;;)
   {
 	  HAL_GPIO_WritePin(GPIOD, PIN_GREEN, GPIO_PIN_SET);
-	  Blocking_Flash(PIN_BLUE, 1000); // blue led
+	  Blocking_20Hz(PIN_BLUE, 1000); // blue led
 	  vTaskDelayUntil(&lastWakeTime, 1500);
 	  HAL_GPIO_WritePin(GPIOD, PIN_GREEN, GPIO_PIN_RESET);
 	  vTaskDelayUntil(&lastWakeTime, 2000);

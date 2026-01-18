@@ -14,7 +14,7 @@ void StartDefaultTask(void const * argument)
   for(;;)
   {
 
-	  Blocking_Flash(PIN_RED, 1000);
+	  Blocking_20Hz(PIN_RED, 1000);
 	  vTaskDelay(1000);
   }
   /* USER CODE END 5 */
