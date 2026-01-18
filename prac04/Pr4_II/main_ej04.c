@@ -22,6 +22,8 @@ void fatal_error(const char* string) {
 void main(void)
 {
 	// ...
+	MX_GPIO_Init();
+	MX_USART2_UART_Init();
 	Mailbox_Init(&TemperatureMailbox, 0);
     
 	/* definition and creation of GreenTask */

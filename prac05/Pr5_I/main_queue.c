@@ -1,5 +1,4 @@
-
-
+#include <stdio.h>
 
 /* Private variables ---------------------------------------------------------*/ 
 osThreadId Sender1Handle;

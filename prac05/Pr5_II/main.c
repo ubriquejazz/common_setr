@@ -1,10 +1,11 @@
+#include <stdio.h>
 #include "../delay.h"
 #include "../mailbox.h"
 
-#include <stdio.h>		// for sprintf
-#include <string.h>		// for strlen
-
 UART_HandleTypeDef huart2;
+osMutexId myMutex01Handle;
+
+/* USER CODE BEGIN PV */
 
 Mailbox_t TemperatureMailbox; // Green + Blue
 osThreadId GreenTaskHandle;		// TA1
@@ -14,15 +15,13 @@ Mailbox_t HumidityMailbox;	// Red + Orange
 osThreadId RedTaskHandle;		// TA2
 osThreadId OrangeTaskHandle;	// TB2
 
-
-char uart_msg[50];
-
-void print_uart_msg() {
-	HAL_UART_Transmit(&huart2, (uint8_t *)uart_msg, strlen(uart_msg), HAL_MAX_DELAY);
-	HAL_UART_Transmit(&huart2, (uint8_t *)"\r\n", 2, HAL_MAX_DELAY);
+int _write(int file, char *ptr, int len) {
+	HAL_UART_Transmit(&huart2,(uint8_t *)ptr,len,10);
+	return len;
 }
 
-void fatal_error() {
+void fatal_error(const char* string) {
+	printf("[Error] %s", string);
 	HAL_GPIO_WritePin(GPIOD, PIN_BLUE, GPIO_PIN_SET);
 	vTaskSuspend(NULL);
 }
@@ -30,8 +29,15 @@ void fatal_error() {
 void main(void)
 {
 	// ...
-	Mailbox_Init(&TemperatureMailbox, 0);
-	Mailbox_Init(&HumidityMailbox, 0);
+  MX_GPIO_Init();
+  MX_USART2_UART_Init();
+  /* USER CODE BEGIN 2 */
+  Mailbox_Init(&TemperatureMailbox, ID_TEMPERATURA);
+  Mailbox_Init(&HumidityMailbox, ID_HUMEDAD);
+
+	/* USER CODE BEGIN RTOS_MUTEX */
+  osMutexDef(myMutex01);
+  myMutex01Handle = osMutexCreate(osMutex(myMutex01));
 
 	/* definition and creation of RedTask */
 	osThreadDef(RedTask, StartRed, osPriorityNormal, 0, 128);
@@ -51,7 +57,7 @@ void main(void)
 
 }
 
-void StartRed(void const * argument) 
+void StartRed(void const * argument)
 {
 	Mailbox_t *my_mailbox = (Mailbox_t *)argument;
 	int current_humidity = 500; // Humedad inicial (50.0%)
@@ -59,13 +65,14 @@ void StartRed(void const * argument)
     {
         current_humidity += 10;
         if (current_humidity > 900)
-        {
             current_humidity = 400;
-        }
+
         if (Mailbox_Post(my_mailbox, current_humidity) == pdFALSE)
-      	  fatal_error();
-        else
-      	  NonBlocking_20Hz(PIN_RED, 19000); // humidity each 19s
+      	  fatal_error("[H] Posting %d", current_humidity);
+        else {
+        	  NonBlocking_Flash(PIN_RED, 7000);
+        	  osDelay(1000);
+        }
     }
 }
 
@@ -77,37 +84,39 @@ void StartGreen(void const * argument)
 	{
       temp_sensor += 1;
       if (Mailbox_Post(my_mailbox, temp_sensor) == pdFALSE)
-    	  fatal_error();
-      else
-    	  NonBlocking_20Hz(PIN_GREEN, 11000); // temperature each 11s
+    	  fatal_error("[T] Posting %d", temp_sensor);
+      else {
+    	  NonBlocking_Flash(PIN_GREEN, 15000);
+    	  osDelay(1000);
+      }
 	}
 }
-
 void StartOrange(void const * argument)
 {
 	Mailbox_t *shared_mbox = (Mailbox_t *)argument;
-	int received_data;
+	int value1, value2;
 	for(;;)
 	{
 		Mailbox_Pend(shared_mbox);
-		received_data = shared_mbox->data;
-		sprintf(uart_msg, "Humedad: %d.%d", 
-		received_data / 10, received_data % 10); 
-		print_uart_msg();
+		value1 = shared_mbox->data;
 
+		osMutexWait(myMutex01Handle, 1000);
+		printf("[H] %d %%\r\n", value1);
+		osMutexRelease(myMutex01Handle);
 	}
 }
 
 void StartBlue(void const * argument)
 {
 	Mailbox_t *shared_mbox = (Mailbox_t *)argument;
-	int received_data;
+	int value1, value2;
 	for(;;)
 	{
 		Mailbox_Pend(shared_mbox);
-		received_data = shared_mbox->data;
-		sprintf(uart_msg,"Temperatura: %d.%d", 
-		received_data / 10, received_data % 10);
-		print_uart_msg();
+		value1 = shared_mbox->data;
+
+		osMutexWait(myMutex01Handle, 1000);
+		printf("[T] %d oC\r\n", value1);
+		osMutexRelease(myMutex01Handle);
 	}
 }

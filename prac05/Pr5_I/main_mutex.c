@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 /* Private variables -----------------------------------------*/ 
 osThreadId Task1Handle;
 osThreadId Task2Handle;

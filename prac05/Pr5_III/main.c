@@ -1,17 +1,9 @@
+#include <stdio.h>
 #include "../delay.h"
 
-#include <stdio.h>		// for sprintf
-#include <string.h>		// for strlen
-
 UART_HandleTypeDef huart2;
-
 osThreadId producerID, consumerID;
-
-
-void fatal_error() {
-	HAL_GPIO_WritePin(GPIOD, PIN_BLUE, GPIO_PIN_SET);
-	vTaskSuspend(NULL);
-}
+osMutexId valueMutex;
 
 const int numChars = 24;
 
@@ -21,14 +13,23 @@ struct CmdData {
 };
 struct CmdData mailbox;
 
-osMutexId valueMutex;
-osMutexDef(valueMutex);
+int _write(int file, char *ptr, int len) {
+	HAL_UART_Transmit(&huart2,(uint8_t *)ptr,len,10);
+	return len;
+}
+
+void fatal_error(const char* string) {
+	printf("[Error] %s", string);
+	HAL_GPIO_WritePin(GPIOD, PIN_BLUE, GPIO_PIN_SET);
+	vTaskSuspend(NULL);
+}
 
 void main(void)
 {
 	// ...
 	
-	valueMutex = osMutexCreate(osMutex(valueMutex));
+  osMutexDef(myMutex01);
+	valueMutex = osMutexCreate(osMutex(myMutex01));
 
 	// Crear Tareas (Threads)
 	osThreadDef(Producer, vProducerTask, osPriorityNormal, 0, 128);
@@ -74,12 +75,12 @@ void vConsumerTask(void const *argument) {
       // Proteger el acceso para copiar los datos
       osMutexWait(valueMutex, osWaitForever);
 
-	  memcpy(&localCopy, &mailbox, sizeof(struct CmdData));
+	    memcpy(&localCopy, &mailbox, sizeof(struct CmdData));
       osMutexRelease(valueMutex);
 
       // Procesar comando "localCopy"
-	
-	  // Notificar al productor que el buffer quedó vacío
+
+      // Notificar al productor que el buffer quedó vacío
       osSignalSend(producerID, 0x01);
 
     }
