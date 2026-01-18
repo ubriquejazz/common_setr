@@ -5,19 +5,8 @@
 
 UART_HandleTypeDef huart2;
 
-osThreadId RedTaskHandle;
-osThreadId GreenTaskHandle;
-osThreadId OrangeTaskHandle;
-osThreadId BlueTaskHandle;
-
 osThreadId producerID, consumerID;
 
-char uart_msg[50];
-
-void print_uart_msg() {
-	HAL_UART_Transmit(&huart2, (uint8_t *)uart_msg, strlen(uart_msg), HAL_MAX_DELAY);
-	HAL_UART_Transmit(&huart2, (uint8_t *)"\r\n", 2, HAL_MAX_DELAY);
-}
 
 void fatal_error() {
 	HAL_GPIO_WritePin(GPIOD, PIN_BLUE, GPIO_PIN_SET);
@@ -25,6 +14,7 @@ void fatal_error() {
 }
 
 const int numChars = 24;
+
 struct CmdData {
   char Cmd[numChars];
   char Obj[numChars];
@@ -38,22 +28,6 @@ void main(void)
 {
 	// ...
 	
-	/* definition and creation of RedTask */
-	osThreadDef(RedTask, StartRed, osPriorityNormal, 0, 128);
-	RedTaskHandle = osThreadCreate(osThread(RedTask), NULL);
-
-	/* definition and creation of GreenTask */
-	osThreadDef(GreenTask, StartGreen, osPriorityNormal, 0, 128);
-	GreenTaskHandle = osThreadCreate(osThread(GreenTask), NULL);
-
-	/* definition and creation of OrangeTask */
-	osThreadDef(OrangeTask, StartOrange, osPriorityNormal, 0, 128);
-	OrangeTaskHandle = osThreadCreate(osThread(OrangeTask), NULL);
-
-	/* definition and creation of BlueTask */
-	osThreadDef(BlueTask, StartBlue, osPriorityNormal, 0, 128);
-	BlueTaskHandle = osThreadCreate(osThread(BlueTask), NULL);
-
 	valueMutex = osMutexCreate(osMutex(valueMutex));
 
 	// Crear Tareas (Threads)
@@ -69,47 +43,6 @@ void main(void)
 	
 	// ...
 
-}
-
-void StartRed(void const * argument) {
-	int current_humidity = 500; // Humedad inicial (50.0%)
-	for(;;)
-    {
-		
-    }
-}
-
-void StartGreen(void const * argument) {
-	int temp_sensor = 250; // Dato a enviar
-	for(;;)
-	{
-
-	}
-}
-
-void StartOrange(void const * argument) {
-	int received_data;
-	for(;;)
-	{
-
-
-		sprintf(uart_msg, "Humedad: %d.%d", 
-		received_data / 10, received_data % 10); 
-		print_uart_msg();
-
-	}
-}
-
-void StartBlue(void const * argument) {
-	int received_data;
-	for(;;)
-	{
-
-
-		sprintf(uart_msg,"Temperatura: %d.%d", 
-		received_data / 10, received_data % 10);
-		print_uart_msg();
-	}
 }
 
 void vProducerTask(void const *argument) {

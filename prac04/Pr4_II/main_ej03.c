@@ -33,8 +33,12 @@ void Pool_Test() {
 }
 
 void main() {
-    // ...
-    Pool_Test();
+  
+  // cubeMx
+  MX_GPIO_Init();
+  MX_UART_Init(&huart2);
+  // pool
+  Pool_Test();
 
 }
 
